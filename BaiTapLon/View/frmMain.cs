@@ -19,7 +19,14 @@ namespace BaiTapLon.View
 
         private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            frmDangNhap formDangNhap = new frmDangNhap();
+            formDangNhap.Show();
+            this.Close();
+        }
 
+        private void thoátToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -99,7 +99,6 @@ namespace BaiTapLon.ViewModels
         }
         public void XoaNhanVien(string maNhanVien)
         {
-            frmQuanLyNhanVien form = new frmQuanLyNhanVien();
             if (string.IsNullOrEmpty(maNhanVien))
             {
                 MessageBox.Show("Vui lòng nhập mã nhân viên cần xóa.");

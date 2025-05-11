@@ -62,9 +62,21 @@ namespace BaiTapLon.View
             BindingList<NhanVien> NhanVienList = NVVM.LayTatCaNhanVien();
             bindingSource.DataSource = NhanVienList;
         }
+        private void LamMoiThongTin()    
+        {
+            txtMaNhanVien.Clear();
+            txtTenNhanVien.Clear();
+            txtSoDienThoai.Clear();
+            txtLuong.Clear();
+            cboGioi.SelectedIndex = -1;
+            cboChucVu.SelectedIndex = -1;
+            dtpNgayVaoLam.Value = DateTime.Today;
+            txtMaNhanVien.Focus();
+        }
 
         private void frmQuanLyNhanVien_Load(object sender, EventArgs e)
         {
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             dataGridView1.DataSource = bindingSource;
             HienThiNhanVien();
         }
@@ -123,6 +135,7 @@ namespace BaiTapLon.View
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             HienThiNhanVien();
+            LamMoiThongTin();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
@@ -160,7 +173,7 @@ namespace BaiTapLon.View
                 return;
             }
 
-            NVVM.SuaNhanVien(maNhanVien, tenNhanVien, soDienThoai, chucVu, ngayVaoLam, luong);
+            NVVM.SuaNhanVien(maNhanVien, tenNhanVien, soDienThoai, chucVu, ngayVaoLam, luong,gioiTinh);
         }
     }
 }

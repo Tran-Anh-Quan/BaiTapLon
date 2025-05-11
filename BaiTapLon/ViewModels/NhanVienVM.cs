@@ -13,6 +13,7 @@ namespace BaiTapLon.ViewModels
 {
     public class NhanVienVM : INotifyPropertyChanged
     {
+        //list và connect sql
         public BindingList<NhanVien> NhanVienList = new BindingList<NhanVien>();
         private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
         public event PropertyChangedEventHandler PropertyChanged;
@@ -20,6 +21,7 @@ namespace BaiTapLon.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
         public NhanVien LayNhanVienTheoMa(string maNhanVien)
         {
             NhanVien nv = null;
@@ -65,10 +67,10 @@ namespace BaiTapLon.ViewModels
                         MaNhanVien = reader["MaNhanVien"].ToString(),
                         TenNhanVien = reader["TenNhanVien"].ToString(),
                         SoDienThoai = reader["SoDienThoai"].ToString(),
-                        GioiTinh = reader["GioiTinh"].ToString(),
                         ChucVu = reader["ChucVu"].ToString(),
                         NgayVaoLam = DateTime.Parse(reader["NgayVaoLam"].ToString()),
-                        Luong = decimal.Parse(reader["Luong"].ToString())
+                        Luong = decimal.Parse(reader["Luong"].ToString()),
+                        GioiTinh = reader["GioiTinh"].ToString()
                     });
                 }
             }
@@ -128,14 +130,14 @@ namespace BaiTapLon.ViewModels
                 }
             }
         }
-        public void SuaNhanVien(string maNhanVien, string tenNhanVien, string soDienThoai, string chucVu, DateTime ngayVaoLam, decimal luong)
+        public void SuaNhanVien(string maNhanVien, string tenNhanVien, string soDienThoai, string chucVu, DateTime ngayVaoLam, decimal luong,string gioiTinh)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string sql = "UPDATE NhanVien SET TenNhanVien = @TenNhanVien, SoDienThoai = @SoDienThoai, ChucVu = @ChucVu, NgayVaoLam = @NgayVaoLam, Luong = @Luong WHERE MaNhanVien = @MaNhanVien";
+                    string sql = "UPDATE NhanVien SET TenNhanVien = @TenNhanVien, SoDienThoai = @SoDienThoai, ChucVu = @ChucVu, NgayVaoLam = @NgayVaoLam, Luong = @Luong,GioiTinh = @GioiTinh WHERE MaNhanVien = @MaNhanVien";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
                     cmd.Parameters.AddWithValue("@TenNhanVien", tenNhanVien);
@@ -143,7 +145,7 @@ namespace BaiTapLon.ViewModels
                     cmd.Parameters.AddWithValue("@ChucVu", chucVu);
                     cmd.Parameters.AddWithValue("@NgayVaoLam", ngayVaoLam);
                     cmd.Parameters.AddWithValue("@Luong", luong);
-
+                    cmd.Parameters.AddWithValue("@GioiTinh", gioiTinh);
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
                     {

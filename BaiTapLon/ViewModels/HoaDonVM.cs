@@ -3,6 +3,7 @@ using BaiTapLon.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -134,30 +135,47 @@ namespace BaiTapLon.ViewModels
         }
         public bool ThemHoaDon(HoaDon hd)
         {
+            if (hd == null)
+            {
+                MessageBox.Show("Hóa đơn không hợp lệ.");
+                return false;
+            }
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string sql = @"INSERT INTO HoaDon 
-                       (MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, TongTien, VAT, ThanhToan)
-                       VALUES 
-                       (@MaHD, @MaKH, @MaSP, @SoLuong, @DonGia, @NgayLap, @GiamGia, @TongTien, @VAT, @ThanhToan)";
+               (MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, TongTien, VAT, ThanhToan)
+               VALUES 
+               (@MaHD, @MaKH, @MaSP, @SoLuong, @DonGia, @NgayLap, @GiamGia, @TongTien, @VAT, @ThanhToan)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@MaHD", hd.MaHoaDon);
-                cmd.Parameters.AddWithValue("@MaKH", hd.MaKhachHang);
-                cmd.Parameters.AddWithValue("@MaSP", hd.MaSanPham);
-                cmd.Parameters.AddWithValue("@SoLuong", hd.SoLuong);
-                cmd.Parameters.AddWithValue("@DonGia", hd.DonGia);
-                cmd.Parameters.AddWithValue("@NgayLap", hd.NgayLap);
-                cmd.Parameters.AddWithValue("@GiamGia", hd.GiamGia);
-                cmd.Parameters.AddWithValue("@TongTien", hd.TongTien);
-                cmd.Parameters.AddWithValue("@VAT", hd.VAT);
-                cmd.Parameters.AddWithValue("@ThanhToan", hd.ThanhToan);
+
+                cmd.Parameters.Add("@MaHD", SqlDbType.NVarChar).Value = hd.MaHoaDon;
+                cmd.Parameters.Add("@MaKH", SqlDbType.NVarChar).Value = hd.MaKhachHang;
+                cmd.Parameters.Add("@MaSP", SqlDbType.NVarChar).Value = hd.MaSanPham;
+                cmd.Parameters.Add("@SoLuong", SqlDbType.Int).Value = hd.SoLuong;
+                cmd.Parameters.Add("@DonGia", SqlDbType.Decimal).Value = hd.DonGia;
+                cmd.Parameters.Add("@NgayLap", SqlDbType.DateTime).Value = hd.NgayLap;
+                cmd.Parameters.Add("@GiamGia", SqlDbType.Int).Value = hd.GiamGia;
+                cmd.Parameters.Add("@TongTien", SqlDbType.Decimal).Value = hd.TongTien;
+                cmd.Parameters.Add("@VAT", SqlDbType.Decimal).Value = hd.VAT;
+                cmd.Parameters.Add("@ThanhToan", SqlDbType.Decimal).Value = hd.ThanhToan;
 
                 conn.Open();
-                int rows = cmd.ExecuteNonQuery();
-                return rows > 0;
+
+                try
+                {
+                    int rows = cmd.ExecuteNonQuery();
+                    return rows > 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi thêm hóa đơn: " + ex.Message);
+                    return false;
+                }
             }
         }
+
         public void XoaHoaDon(string maHoaDon)
         {
             if (string.IsNullOrEmpty(maHoaDon))

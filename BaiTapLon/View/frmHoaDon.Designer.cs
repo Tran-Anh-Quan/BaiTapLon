@@ -32,10 +32,10 @@
             this.cboGioiTinh = new System.Windows.Forms.Label();
             this.txtMaSanPham = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnLamMoi = new System.Windows.Forms.Button();
             this.btnTimKiem = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnXoa = new System.Windows.Forms.Button();
+            this.btnSua = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.txtSoLuong = new System.Windows.Forms.TextBox();
             this.txtMaKhachHang = new System.Windows.Forms.TextBox();
@@ -46,11 +46,11 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtDonGia = new System.Windows.Forms.TextBox();
-            this.dtpNgayLap = new System.Windows.Forms.DateTimePicker();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtGiamGia = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dtpNgayLap = new System.Windows.Forms.DateTimePicker();
+            this.txtDonGia = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -82,15 +82,16 @@
             this.label5.TabIndex = 13;
             this.label5.Text = "Mã Sản Phẩm";
             // 
-            // button5
+            // btnLamMoi
             // 
-            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(540, 148);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(93, 31);
-            this.button5.TabIndex = 12;
-            this.button5.Text = "Làm mới";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btnLamMoi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLamMoi.Location = new System.Drawing.Point(566, 148);
+            this.btnLamMoi.Name = "btnLamMoi";
+            this.btnLamMoi.Size = new System.Drawing.Size(93, 31);
+            this.btnLamMoi.TabIndex = 12;
+            this.btnLamMoi.Text = "Làm mới";
+            this.btnLamMoi.UseVisualStyleBackColor = true;
+            this.btnLamMoi.Click += new System.EventHandler(this.btnLamMoi_Click);
             // 
             // btnTimKiem
             // 
@@ -103,25 +104,27 @@
             this.btnTimKiem.UseVisualStyleBackColor = true;
             this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
-            // button3
+            // btnXoa
             // 
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(296, 148);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(93, 31);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Xóa";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnXoa.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnXoa.Location = new System.Drawing.Point(293, 148);
+            this.btnXoa.Name = "btnXoa";
+            this.btnXoa.Size = new System.Drawing.Size(93, 31);
+            this.btnXoa.TabIndex = 10;
+            this.btnXoa.Text = "Xóa";
+            this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
-            // button2
+            // btnSua
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(162, 148);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(93, 31);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Sửa";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnSua.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSua.Location = new System.Drawing.Point(162, 148);
+            this.btnSua.Name = "btnSua";
+            this.btnSua.Size = new System.Drawing.Size(93, 31);
+            this.btnSua.TabIndex = 9;
+            this.btnSua.Text = "Sửa";
+            this.btnSua.UseVisualStyleBackColor = true;
+            this.btnSua.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -214,10 +217,10 @@
             this.panel1.Controls.Add(this.cboGioiTinh);
             this.panel1.Controls.Add(this.txtMaSanPham);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.button5);
+            this.panel1.Controls.Add(this.btnLamMoi);
             this.panel1.Controls.Add(this.btnTimKiem);
-            this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.btnXoa);
+            this.panel1.Controls.Add(this.btnSua);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.txtSoLuong);
             this.panel1.Controls.Add(this.txtMaKhachHang);
@@ -233,30 +236,12 @@
             this.panel1.Size = new System.Drawing.Size(743, 199);
             this.panel1.TabIndex = 4;
             // 
-            // label4
+            // txtGiamGia
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(394, 106);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 18);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Ngày lập";
-            // 
-            // txtDonGia
-            // 
-            this.txtDonGia.Location = new System.Drawing.Point(500, 63);
-            this.txtDonGia.Name = "txtDonGia";
-            this.txtDonGia.Size = new System.Drawing.Size(112, 24);
-            this.txtDonGia.TabIndex = 17;
-            // 
-            // dtpNgayLap
-            // 
-            this.dtpNgayLap.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpNgayLap.Location = new System.Drawing.Point(500, 106);
-            this.dtpNgayLap.Name = "dtpNgayLap";
-            this.dtpNgayLap.Size = new System.Drawing.Size(112, 24);
-            this.dtpNgayLap.TabIndex = 18;
+            this.txtGiamGia.Location = new System.Drawing.Point(628, 64);
+            this.txtGiamGia.Name = "txtGiamGia";
+            this.txtGiamGia.Size = new System.Drawing.Size(112, 24);
+            this.txtGiamGia.TabIndex = 20;
             // 
             // label6
             // 
@@ -267,12 +252,30 @@
             this.label6.TabIndex = 19;
             this.label6.Text = "Giảm giá";
             // 
-            // txtGiamGia
+            // dtpNgayLap
             // 
-            this.txtGiamGia.Location = new System.Drawing.Point(628, 64);
-            this.txtGiamGia.Name = "txtGiamGia";
-            this.txtGiamGia.Size = new System.Drawing.Size(112, 24);
-            this.txtGiamGia.TabIndex = 20;
+            this.dtpNgayLap.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpNgayLap.Location = new System.Drawing.Point(500, 104);
+            this.dtpNgayLap.Name = "dtpNgayLap";
+            this.dtpNgayLap.Size = new System.Drawing.Size(112, 24);
+            this.dtpNgayLap.TabIndex = 18;
+            // 
+            // txtDonGia
+            // 
+            this.txtDonGia.Location = new System.Drawing.Point(500, 63);
+            this.txtDonGia.Name = "txtDonGia";
+            this.txtDonGia.Size = new System.Drawing.Size(112, 24);
+            this.txtDonGia.TabIndex = 17;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(394, 106);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(73, 18);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Ngày lập";
             // 
             // frmHoaDon
             // 
@@ -297,10 +300,10 @@
         private System.Windows.Forms.Label cboGioiTinh;
         private System.Windows.Forms.TextBox txtMaSanPham;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnLamMoi;
         private System.Windows.Forms.Button btnTimKiem;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnXoa;
+        private System.Windows.Forms.Button btnSua;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox txtSoLuong;
         private System.Windows.Forms.TextBox txtMaKhachHang;

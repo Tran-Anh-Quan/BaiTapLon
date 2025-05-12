@@ -26,6 +26,17 @@ namespace BaiTapLon.View
             BindingList<HoaDon> KhachHangList = HDVM.LayTatCaHoaDon();
             bindingSource.DataSource = KhachHangList;
         }
+        private void LamMoiThongTinHoaDon()
+        {
+            txtMaHoaDon.Clear();
+            txtMaKhachHang.Clear();
+            txtMaSanPham.Clear();
+            txtSoLuong.Clear();
+            txtDonGia.Clear();
+            txtGiamGia.Clear();
+            dtpNgayLap.Value = DateTime.Now;
+            txtMaHoaDon.Focus();
+        }
 
         private void frmHoaDon_Load(object sender, EventArgs e)
         {
@@ -155,6 +166,66 @@ namespace BaiTapLon.View
             {
                 MessageBox.Show("Thêm thất bại!");
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string maHoaDon = txtMaHoaDon.Text.Trim();
+            string maKhachHang = txtMaKhachHang.Text.Trim();
+            string maSanPham = txtMaSanPham.Text.Trim();
+            DateTime ngayLap = dtpNgayLap.Value;
+
+            if (string.IsNullOrEmpty(maHoaDon) || string.IsNullOrEmpty(maKhachHang) || string.IsNullOrEmpty(maSanPham) ||
+                string.IsNullOrEmpty(txtSoLuong.Text) || string.IsNullOrEmpty(txtDonGia.Text) || string.IsNullOrEmpty(txtGiamGia.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
+                return;
+            }
+
+            if (!int.TryParse(txtSoLuong.Text.Trim(), out int soLuong))
+            {
+                MessageBox.Show("Số lượng không hợp lệ.");
+                return;
+            }
+
+            if (!decimal.TryParse(txtDonGia.Text.Trim(), out decimal donGia))
+            {
+                MessageBox.Show("Đơn giá không hợp lệ.");
+                return;
+            }
+
+            if (!int.TryParse(txtGiamGia.Text.Trim(), out int giamGia))
+            {
+                MessageBox.Show("Giảm giá không hợp lệ.");
+                return;
+            }
+
+            decimal tongTien = soLuong * donGia * (1 - giamGia / 100m);
+            decimal vat = Math.Round(tongTien * 0.1m, 2);
+            decimal thanhToan = tongTien + vat;
+
+            HDVM.SuaHoaDon(maHoaDon, maKhachHang, maSanPham, soLuong, donGia, ngayLap, giamGia, tongTien, vat, thanhToan);
+
+        }
+
+        private void btnLamMoi_Click(object sender, EventArgs e)
+        {
+            LamMoiThongTinHoaDon();
+            HienThiHoaDon();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                string maHoaDon = dataGridView1.SelectedRows[0].Cells["MaHoaDon"].Value.ToString();
+                HDVM.XoaHoaDon(maHoaDon);
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn hóa đơn cần xóa.");
+            }
+
         }
     }
 }

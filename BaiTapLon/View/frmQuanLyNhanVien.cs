@@ -119,9 +119,21 @@ namespace BaiTapLon.View
                 SoDienThoai = txtSoDienThoai.Text.Trim(),
                 GioiTinh = cboGioi.Text,
                 ChucVu = cboChucVu.Text,
-                NgayVaoLam = dtpNgayVaoLam.Value,
-                Luong = decimal.Parse(txtLuong.Text.Trim())
+                NgayVaoLam = dtpNgayVaoLam.Value
+
             };
+            if (string.IsNullOrWhiteSpace(nv.MaNhanVien))
+            {
+                MessageBox.Show("Mã Nhân Viên không được để trống.");
+                return;
+            }
+            decimal luong;
+            if (!decimal.TryParse(txtLuong.Text.Trim(), out luong))
+            {
+                MessageBox.Show("Lương không hợp lệ.");
+                return;
+            }
+            nv.Luong = luong;
             if (NVVM.ThemNhanVien(nv))
             {
                 MessageBox.Show("Thêm nhân viên thành công!");
@@ -174,6 +186,86 @@ namespace BaiTapLon.View
             }
 
             NVVM.SuaNhanVien(maNhanVien, tenNhanVien, soDienThoai, chucVu, ngayVaoLam, luong,gioiTinh);
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void dtpNgayVaoLam_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboGioi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboGioiTinh_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboChucVu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSoDienThoai_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLuong_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTenNhanVien_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtMaNhanVien_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BaiTapLon
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmQuanLySanPham());
+            Application.Run(new frmQuanLyKhachHang());
         }
     }
 }

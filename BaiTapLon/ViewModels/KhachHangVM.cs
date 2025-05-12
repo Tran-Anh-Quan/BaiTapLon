@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace BaiTapLon.ViewModels
 {
-    public class KhachHangVM
+    public class KhachHangVM : INotifyPropertyChanged
     {
         public BindingList<KhachHang> KhachHangList = new BindingList<KhachHang>();
         private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";

@@ -54,6 +54,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ChiTietHoaDonVM.cs" />
+    <Compile Include="ViewModels\HoaDonVM.cs" />
     <Compile Include="ViewModels\KhachHangVM.cs" />
     <Compile Include="ViewModels\NhanVienVM.cs" />
     <Compile Include="ViewModels\SanPhamVM.cs" />

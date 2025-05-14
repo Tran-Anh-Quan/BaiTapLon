@@ -120,7 +120,7 @@
             // 
             // btnTim
             // 
-            this.btnTim.Location = new System.Drawing.Point(400, 127);
+            this.btnTim.Location = new System.Drawing.Point(737, 88);
             this.btnTim.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnTim.Name = "btnTim";
             this.btnTim.Size = new System.Drawing.Size(80, 24);
@@ -185,7 +185,7 @@
             this.dtpNgayVaoLam.Location = new System.Drawing.Point(126, 110);
             this.dtpNgayVaoLam.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpNgayVaoLam.Name = "dtpNgayVaoLam";
-            this.dtpNgayVaoLam.Size = new System.Drawing.Size(200, 22);
+            this.dtpNgayVaoLam.Size = new System.Drawing.Size(194, 22);
             this.dtpNgayVaoLam.TabIndex = 10;
             // 
             // lblNgayVaoLam

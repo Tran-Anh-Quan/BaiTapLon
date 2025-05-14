@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="HoaDonDataSet" targetNamespace="http://tempuri.org/HoaDonDataSet.xsd" xmlns:mstns="http://tempuri.org/HoaDonDataSet.xsd" xmlns="http://tempuri.org/HoaDonDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+<xs:schema id="data" targetNamespace="http://tempuri.org/data.xsd" xmlns:mstns="http://tempuri.org/data.xsd" xmlns="http://tempuri.org/data.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
   <xs:annotation>
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="QuanLyBanHangConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="QuanLyBanHangConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.BaiTapLon.Properties.Settings.GlobalReference.Default.QuanLyBanHangConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="QuanLyBanHangConnectionString1" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="QuanLyBanHangConnectionString1 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.BaiTapLon.Properties.Settings.GlobalReference.Default.QuanLyBanHangConnectionString1" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
-          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="HoaDonTableTableAdapter" GeneratorDataComponentClassName="HoaDonTableTableAdapter" Name="HoaDonTable" UserDataComponentName="HoaDonTableTableAdapter">
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="HoaDonTableAdapter" GeneratorDataComponentClassName="HoaDonTableAdapter" Name="HoaDon" UserDataComponentName="HoaDonTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="QuanLyBanHangConnectionString (Settings)" DbObjectName="QuanLyBanHang.dbo.HoaDon" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="QuanLyBanHangConnectionString1 (Settings)" DbObjectName="QuanLyBanHang.dbo.HoaDon" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <DeleteCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>DELETE FROM [dbo].[HoaDon] WHERE (([MaHoaDon] = @Original_MaHoaDon) AND ((@IsNull_MaKhachHang = 1 AND [MaKhachHang] IS NULL) OR ([MaKhachHang] = @Original_MaKhachHang)) AND ((@IsNull_MaSanPham = 1 AND [MaSanPham] IS NULL) OR ([MaSanPham] = @Original_MaSanPham)) AND ([SoLuong] = @Original_SoLuong) AND ([DonGia] = @Original_DonGia) AND ([NgayLap] = @Original_NgayLap) AND ([GiamGia] = @Original_GiamGia) AND ([TongTien] = @Original_TongTien) AND ([VAT] = @Original_VAT) AND ([ThanhToan] = @Original_ThanhToan))</CommandText>
@@ -104,47 +104,47 @@ SELECT MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, Tong
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="HoaDonDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="HoaDonDataSet" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="HoaDonDataSet">
+  <xs:element name="data" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="data" msprop:Generator_DataSetName="data">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="HoaDonTable" msprop:Generator_RowClassName="HoaDonTableRow" msprop:Generator_RowEvHandlerName="HoaDonTableRowChangeEventHandler" msprop:Generator_RowDeletedName="HoaDonTableRowDeleted" msprop:Generator_RowDeletingName="HoaDonTableRowDeleting" msprop:Generator_RowEvArgName="HoaDonTableRowChangeEvent" msprop:Generator_TablePropName="HoaDonTable" msprop:Generator_RowChangedName="HoaDonTableRowChanged" msprop:Generator_UserTableName="HoaDonTable" msprop:Generator_RowChangingName="HoaDonTableRowChanging" msprop:Generator_TableClassName="HoaDonTableDataTable" msprop:Generator_TableVarName="tableHoaDonTable">
+        <xs:element name="HoaDon" msprop:Generator_RowEvHandlerName="HoaDonRowChangeEventHandler" msprop:Generator_RowDeletedName="HoaDonRowDeleted" msprop:Generator_RowDeletingName="HoaDonRowDeleting" msprop:Generator_RowEvArgName="HoaDonRowChangeEvent" msprop:Generator_TablePropName="HoaDon" msprop:Generator_RowChangedName="HoaDonRowChanged" msprop:Generator_RowChangingName="HoaDonRowChanging" msprop:Generator_TableClassName="HoaDonDataTable" msprop:Generator_RowClassName="HoaDonRow" msprop:Generator_TableVarName="tableHoaDon" msprop:Generator_UserTableName="HoaDon">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="MaHoaDon" msprop:Generator_UserColumnName="MaHoaDon" msprop:Generator_ColumnPropNameInTable="MaHoaDonColumn" msprop:Generator_ColumnPropNameInRow="MaHoaDon" msprop:Generator_ColumnVarNameInTable="columnMaHoaDon">
+              <xs:element name="MaHoaDon" msprop:Generator_ColumnPropNameInRow="MaHoaDon" msprop:Generator_ColumnPropNameInTable="MaHoaDonColumn" msprop:Generator_ColumnVarNameInTable="columnMaHoaDon" msprop:Generator_UserColumnName="MaHoaDon">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="10" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="MaKhachHang" msprop:Generator_UserColumnName="MaKhachHang" msprop:Generator_ColumnPropNameInTable="MaKhachHangColumn" msprop:Generator_ColumnPropNameInRow="MaKhachHang" msprop:Generator_ColumnVarNameInTable="columnMaKhachHang" minOccurs="0">
+              <xs:element name="MaKhachHang" msprop:Generator_ColumnPropNameInRow="MaKhachHang" msprop:Generator_ColumnPropNameInTable="MaKhachHangColumn" msprop:Generator_ColumnVarNameInTable="columnMaKhachHang" msprop:Generator_UserColumnName="MaKhachHang" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="10" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="MaSanPham" msprop:Generator_UserColumnName="MaSanPham" msprop:Generator_ColumnPropNameInTable="MaSanPhamColumn" msprop:Generator_ColumnPropNameInRow="MaSanPham" msprop:Generator_ColumnVarNameInTable="columnMaSanPham" minOccurs="0">
+              <xs:element name="MaSanPham" msprop:Generator_ColumnPropNameInRow="MaSanPham" msprop:Generator_ColumnPropNameInTable="MaSanPhamColumn" msprop:Generator_ColumnVarNameInTable="columnMaSanPham" msprop:Generator_UserColumnName="MaSanPham" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="10" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="SoLuong" msprop:Generator_UserColumnName="SoLuong" msprop:Generator_ColumnPropNameInTable="SoLuongColumn" msprop:Generator_ColumnPropNameInRow="SoLuong" msprop:Generator_ColumnVarNameInTable="columnSoLuong" type="xs:int" />
-              <xs:element name="DonGia" msprop:Generator_UserColumnName="DonGia" msprop:Generator_ColumnPropNameInTable="DonGiaColumn" msprop:Generator_ColumnPropNameInRow="DonGia" msprop:Generator_ColumnVarNameInTable="columnDonGia" type="xs:decimal" />
-              <xs:element name="NgayLap" msprop:Generator_UserColumnName="NgayLap" msprop:Generator_ColumnPropNameInTable="NgayLapColumn" msprop:Generator_ColumnPropNameInRow="NgayLap" msprop:Generator_ColumnVarNameInTable="columnNgayLap" type="xs:dateTime" />
-              <xs:element name="GiamGia" msprop:Generator_UserColumnName="GiamGia" msprop:Generator_ColumnPropNameInTable="GiamGiaColumn" msprop:Generator_ColumnPropNameInRow="GiamGia" msprop:Generator_ColumnVarNameInTable="columnGiamGia" type="xs:int" />
-              <xs:element name="TongTien" msprop:Generator_UserColumnName="TongTien" msprop:Generator_ColumnPropNameInTable="TongTienColumn" msprop:Generator_ColumnPropNameInRow="TongTien" msprop:Generator_ColumnVarNameInTable="columnTongTien" type="xs:decimal" />
-              <xs:element name="VAT" msprop:Generator_UserColumnName="VAT" msprop:Generator_ColumnPropNameInTable="VATColumn" msprop:Generator_ColumnPropNameInRow="VAT" msprop:Generator_ColumnVarNameInTable="columnVAT" type="xs:decimal" />
-              <xs:element name="ThanhToan" msprop:Generator_UserColumnName="ThanhToan" msprop:Generator_ColumnPropNameInTable="ThanhToanColumn" msprop:Generator_ColumnPropNameInRow="ThanhToan" msprop:Generator_ColumnVarNameInTable="columnThanhToan" type="xs:decimal" />
+              <xs:element name="SoLuong" msprop:Generator_ColumnPropNameInRow="SoLuong" msprop:Generator_ColumnPropNameInTable="SoLuongColumn" msprop:Generator_ColumnVarNameInTable="columnSoLuong" msprop:Generator_UserColumnName="SoLuong" type="xs:int" />
+              <xs:element name="DonGia" msprop:Generator_ColumnPropNameInRow="DonGia" msprop:Generator_ColumnPropNameInTable="DonGiaColumn" msprop:Generator_ColumnVarNameInTable="columnDonGia" msprop:Generator_UserColumnName="DonGia" type="xs:decimal" />
+              <xs:element name="NgayLap" msprop:Generator_ColumnPropNameInRow="NgayLap" msprop:Generator_ColumnPropNameInTable="NgayLapColumn" msprop:Generator_ColumnVarNameInTable="columnNgayLap" msprop:Generator_UserColumnName="NgayLap" type="xs:dateTime" />
+              <xs:element name="GiamGia" msprop:Generator_ColumnPropNameInRow="GiamGia" msprop:Generator_ColumnPropNameInTable="GiamGiaColumn" msprop:Generator_ColumnVarNameInTable="columnGiamGia" msprop:Generator_UserColumnName="GiamGia" type="xs:int" />
+              <xs:element name="TongTien" msprop:Generator_ColumnPropNameInRow="TongTien" msprop:Generator_ColumnPropNameInTable="TongTienColumn" msprop:Generator_ColumnVarNameInTable="columnTongTien" msprop:Generator_UserColumnName="TongTien" type="xs:decimal" />
+              <xs:element name="VAT" msprop:Generator_ColumnPropNameInRow="VAT" msprop:Generator_ColumnPropNameInTable="VATColumn" msprop:Generator_ColumnVarNameInTable="columnVAT" msprop:Generator_UserColumnName="VAT" type="xs:decimal" />
+              <xs:element name="ThanhToan" msprop:Generator_ColumnPropNameInRow="ThanhToan" msprop:Generator_ColumnPropNameInTable="ThanhToanColumn" msprop:Generator_ColumnVarNameInTable="columnThanhToan" msprop:Generator_UserColumnName="ThanhToan" type="xs:decimal" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:HoaDonTable" />
+      <xs:selector xpath=".//mstns:HoaDon" />
       <xs:field xpath="mstns:MaHoaDon" />
     </xs:unique>
   </xs:element>

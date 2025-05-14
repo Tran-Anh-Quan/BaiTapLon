@@ -98,6 +98,7 @@ namespace BaiTapLon.View
             this.btnXuatBaoCao.TabIndex = 11;
             this.btnXuatBaoCao.Text = "Xuất báo cáo";
             this.btnXuatBaoCao.UseVisualStyleBackColor = true;
+            this.btnXuatBaoCao.Click += new System.EventHandler(this.btnXuatBaoCao_Click_1);
             // 
             // btnKiemTraKH
             // 

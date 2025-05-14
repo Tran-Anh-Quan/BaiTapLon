@@ -373,7 +373,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(900, 512);
+            this.ClientSize = new System.Drawing.Size(900, 508);
             this.Controls.Add(this.pnlGrid);
             this.Controls.Add(this.pnlInput);
             this.Controls.Add(this.pnlHeader);

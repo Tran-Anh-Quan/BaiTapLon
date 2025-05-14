@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BaiTapLon {
+namespace BaiTapLon.Report {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -16,14 +16,14 @@ namespace BaiTapLon {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class HoaDonReport : ReportClass {
+    public class BaoCaopHoaDon : ReportClass {
         
-        public HoaDonReport() {
+        public BaoCaopHoaDon() {
         }
         
         public override string ResourceName {
             get {
-                return "HoaDonReport.rpt";
+                return "BaoCaopHoaDon.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace BaiTapLon {
         
         public override string FullResourceName {
             get {
-                return "BaiTapLon.HoaDonReport.rpt";
+                return "BaiTapLon.Report.BaoCaopHoaDon.rpt";
             }
             set {
                 // Do nothing
@@ -90,9 +90,9 @@ namespace BaiTapLon {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedHoaDonReport : Component, ICachedReport {
+    public class CachedBaoCaopHoaDon : Component, ICachedReport {
         
-        public CachedHoaDonReport() {
+        public CachedBaoCaopHoaDon() {
         }
         
         [Browsable(false)]
@@ -129,7 +129,7 @@ namespace BaiTapLon {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            HoaDonReport rpt = new HoaDonReport();
+            BaoCaopHoaDon rpt = new BaoCaopHoaDon();
             rpt.Site = this.Site;
             return rpt;
         }

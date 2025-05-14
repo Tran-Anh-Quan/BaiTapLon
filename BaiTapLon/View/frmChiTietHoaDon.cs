@@ -163,5 +163,12 @@ namespace BaiTapLon.View
                 lblThanhToanValue.Text = selectedHoaDon.ThanhToan.ToString("N2");
             }
         }
+
+        private void btnXuatBaoCao_Click_1(object sender, EventArgs e)
+        {
+            this.Hide();
+            frmXuatHoaDon xuatHoaDon = new frmXuatHoaDon();
+            xuatHoaDon.Show();
+        }
     }
 }

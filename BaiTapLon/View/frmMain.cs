@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
@@ -17,53 +10,48 @@ namespace BaiTapLon.View
             InitializeComponent();
         }
 
-        private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuDangXuat_Click(object sender, EventArgs e)
         {
-            frmDangNhap formDangNhap = new frmDangNhap();
-            formDangNhap.Show();
-            this.Close();
+            frmDangNhap frm = new frmDangNhap();
+            frm.Show();
+            this.Hide();
         }
-        private void OpenChild(Form childForm)
-        {
-            foreach (Form form in this.MdiChildren)
-            {
-                if (form.GetType() == childForm.GetType())
-                {
-                    form.Activate(); 
-                    return;
-                }
-            }
-            childForm.MdiParent = this; 
-            childForm.Show();           
-        }
-        private void thoátToolStripMenuItem1_Click(object sender, EventArgs e)
+
+        private void mnuThoat_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void sảnPhẩmToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuSanPham_Click(object sender, EventArgs e)
         {
-            OpenChild(new frmQuanLySanPham());
+            OpenForm(new frmQuanLySanPham());
         }
 
-        private void nhânViênToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuNhanVien_Click(object sender, EventArgs e)
         {
-            OpenChild(new frmQuanLyNhanVien());
+            OpenForm(new frmQuanLyNhanVien());
         }
 
-        private void kháchHàngToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuKhachHang_Click(object sender, EventArgs e)
         {
-            OpenChild(new frmQuanLyKhachHang());
+            OpenForm(new frmQuanLyKhachHang());
         }
 
-        private void hóaĐơnToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuHoaDon_Click(object sender, EventArgs e)
         {
-            OpenChild(new frmHoaDon());
+            OpenForm(new frmQuanLyHoaDon());
         }
 
-        private void tàiKhoảnToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnuTaiKhoan_Click(object sender, EventArgs e)
         {
-            OpenChild(new frmQuanLyTaiKhoan());
+            OpenForm(new frmQuanLyTaiKhoan());
+        }
+
+        private void OpenForm(Form form)
+        {
+            form.FormClosed += (s, args) => this.Show();
+            form.Show();
+            this.Hide();
         }
     }
 }

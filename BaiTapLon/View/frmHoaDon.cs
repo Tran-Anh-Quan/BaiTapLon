@@ -1,32 +1,194 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
-    public partial class frmHoaDon : Form
+    public partial class frmQuanLyHoaDon : Form
     {
-        HoaDonVM HDVM = new HoaDonVM();
-        BindingSource bindingSource = new BindingSource();
-        public frmHoaDon()
+        private readonly HoaDonVM viewModel;
+
+        public frmQuanLyHoaDon()
         {
             InitializeComponent();
+            viewModel = new HoaDonVM();
+            SetupDataGridView();
+            LoadHoaDonData();
+            SetupEventHandlers();
         }
-        private void HienThiHoaDon()
+
+        private void SetupDataGridView()
         {
-            bindingSource.Clear();
-            BindingList<HoaDon> KhachHangList = HDVM.LayTatCaHoaDon();
-            bindingSource.DataSource = KhachHangList;
+            dgvHoaDon.AutoGenerateColumns = false;
+            dgvHoaDon.DataSource = viewModel.HoaDonList;
+            dgvHoaDon.Columns.Clear();
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaHoaDon", HeaderText = "Mã Hóa Đơn" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaKhachHang", HeaderText = "Mã Khách Hàng" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaSanPham", HeaderText = "Mã Sản Phẩm" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoLuong", HeaderText = "Số Lượng" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DonGia", HeaderText = "Đơn Giá", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiamGia", HeaderText = "Giảm Giá (%)" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NgayLap", HeaderText = "Ngày Lập", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TongTien", HeaderText = "Tổng Tiền", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "VAT", HeaderText = "VAT", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ThanhToan", HeaderText = "Thanh Toán", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
         }
-        private void LamMoiThongTinHoaDon()
+
+        private void LoadHoaDonData()
+        {
+            viewModel.LayTatCaHoaDon();
+        }
+
+        private void SetupEventHandlers()
+        {
+            txtSoLuong.TextChanged += CalculateSummary;
+            txtDonGia.TextChanged += CalculateSummary;
+            txtGiamGia.TextChanged += CalculateSummary;
+            dgvHoaDon.SelectionChanged += DgvHoaDon_SelectionChanged;
+        }
+
+        private void CalculateSummary(object sender, EventArgs e)
+        {
+            try
+            {
+                int soLuong = string.IsNullOrEmpty(txtSoLuong.Text) ? 0 : int.Parse(txtSoLuong.Text);
+                decimal donGia = string.IsNullOrEmpty(txtDonGia.Text) ? 0 : decimal.Parse(txtDonGia.Text);
+                int giamGia = string.IsNullOrEmpty(txtGiamGia.Text) ? 0 : int.Parse(txtGiamGia.Text);
+
+                decimal tongTien = soLuong * donGia * (1 - giamGia / 100m);
+                decimal vat = Math.Round(tongTien * 0.1m, 2);
+                decimal thanhToan = tongTien + vat;
+
+                txtTongTien.Text = tongTien.ToString("N2");
+                txtVAT.Text = vat.ToString("N2");
+                txtThanhToan.Text = thanhToan.ToString("N2");
+            }
+            catch
+            {
+                txtTongTien.Text = "0.00";
+                txtVAT.Text = "0.00";
+                txtThanhToan.Text = "0.00";
+            }
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            HoaDon hoaDon = CreateHoaDonFromInputs();
+            if (viewModel.ThemHoaDon(hoaDon))
+            {
+                ClearInputs();
+            }
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            HoaDon hoaDon = CreateHoaDonFromInputs();
+            viewModel.SuaHoaDon(hoaDon);
+            ClearInputs();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            string maHoaDon = txtMaHoaDon.Text.Trim();
+            if (string.IsNullOrEmpty(maHoaDon))
+            {
+                MessageBox.Show("Vui lòng nhập mã hóa đơn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có chắc muốn xóa hóa đơn này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                viewModel.XoaHoaDon(maHoaDon);
+                ClearInputs();
+            }
+        }
+
+        private void btnTim_Click(object sender, EventArgs e)
+        {
+            string keyword = txtMaHoaDon.Text.Trim();
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập mã hóa đơn hoặc mã khách hàng để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = viewModel.TimKiemHoaDon(keyword);
+            if (result.Count > 0)
+            {
+                dgvHoaDon.DataSource = result;
+            }
+            else
+            {
+                dgvHoaDon.DataSource = viewModel.HoaDonList;
+            }
+        }
+
+        private void btnLamMoi_Click(object sender, EventArgs e)
+        {
+            ClearInputs();
+            LoadHoaDonData();
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void DgvHoaDon_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvHoaDon.SelectedRows.Count > 0)
+            {
+                HoaDon selectedHoaDon = (HoaDon)dgvHoaDon.SelectedRows[0].DataBoundItem;
+                txtMaHoaDon.Text = selectedHoaDon.MaHoaDon;
+                txtMaKhachHang.Text = selectedHoaDon.MaKhachHang;
+                txtMaSanPham.Text = selectedHoaDon.MaSanPham;
+                txtSoLuong.Text = selectedHoaDon.SoLuong.ToString();
+                txtDonGia.Text = selectedHoaDon.DonGia.ToString();
+                txtGiamGia.Text = selectedHoaDon.GiamGia.ToString();
+                dtpNgayLap.Value = selectedHoaDon.NgayLap;
+                txtTongTien.Text = selectedHoaDon.TongTien.ToString("N2");
+                txtVAT.Text = selectedHoaDon.VAT.ToString("N2");
+                txtThanhToan.Text = selectedHoaDon.ThanhToan.ToString("N2");
+            }
+        }
+
+        private bool ValidateInputs()
+        {
+            if (string.IsNullOrWhiteSpace(txtMaHoaDon.Text) ||
+                string.IsNullOrWhiteSpace(txtMaKhachHang.Text) ||
+                string.IsNullOrWhiteSpace(txtMaSanPham.Text) ||
+                string.IsNullOrWhiteSpace(txtSoLuong.Text) ||
+                string.IsNullOrWhiteSpace(txtDonGia.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        private HoaDon CreateHoaDonFromInputs()
+        {
+            return new HoaDon
+            {
+                MaHoaDon = txtMaHoaDon.Text.Trim(),
+                MaKhachHang = txtMaKhachHang.Text.Trim(),
+                MaSanPham = txtMaSanPham.Text.Trim(),
+                SoLuong = int.Parse(txtSoLuong.Text),
+                DonGia = decimal.Parse(txtDonGia.Text),
+                GiamGia = string.IsNullOrEmpty(txtGiamGia.Text) ? 0 : int.Parse(txtGiamGia.Text),
+                NgayLap = dtpNgayLap.Value,
+                TongTien = decimal.Parse(txtTongTien.Text),
+                VAT = decimal.Parse(txtVAT.Text),
+                ThanhToan = decimal.Parse(txtThanhToan.Text)
+            };
+        }
+
+        private void ClearInputs()
         {
             txtMaHoaDon.Clear();
             txtMaKhachHang.Clear();
@@ -35,197 +197,9 @@ namespace BaiTapLon.View
             txtDonGia.Clear();
             txtGiamGia.Clear();
             dtpNgayLap.Value = DateTime.Now;
-            txtMaHoaDon.Focus();
-        }
-
-        private void frmHoaDon_Load(object sender, EventArgs e)
-        {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView1.DataSource = bindingSource;
-            HienThiHoaDon();
-        }
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            string maHoaDon = txtMaHoaDon.Text.Trim();
-            if (string.IsNullOrEmpty(maHoaDon))
-            {
-                MessageBox.Show("Vui lòng nhập mã hóa đơn cần tìm kiếm.");
-                return;
-            }
-
-            HoaDon hd = HDVM.LayHoaDonTheoMa(maHoaDon);
-            if (hd == null)
-            {
-                MessageBox.Show("Không tìm thấy hóa đơn.");
-                return;
-            }
-
-            txtMaKhachHang.Text = hd.MaKhachHang;
-            txtMaSanPham.Text = hd.MaSanPham;
-            txtSoLuong.Text = hd.SoLuong.ToString();
-            txtDonGia.Text = hd.DonGia.ToString("N0");
-            dtpNgayLap.Value = hd.NgayLap;
-            txtGiamGia.Text = hd.GiamGia.ToString();
-
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Cells["MaHoaDon"].Value != null &&
-                    row.Cells["MaHoaDon"].Value.ToString().Equals(maHoaDon, StringComparison.OrdinalIgnoreCase))
-                {
-                    row.Selected = true;
-                    dataGridView1.CurrentCell = row.Cells[0];
-                    break;
-                }
-            }
-
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                row.Selected = true;
-
-                var maHoaDon = row.Cells["MaHoaDon"].Value?.ToString();
-                if (string.IsNullOrWhiteSpace(maHoaDon))
-                {
-                    MessageBox.Show("Mã hóa đơn không hợp lệ.");
-                    return;
-                }
-                txtMaHoaDon.Text = maHoaDon;
-                txtMaKhachHang.Text = row.Cells["MaKhachHang"].Value?.ToString();
-                txtMaSanPham.Text = row.Cells["MaSanPham"].Value?.ToString();
-
-                txtSoLuong.Text = row.Cells["SoLuong"].Value?.ToString();
-                txtDonGia.Text = row.Cells["DonGia"].Value?.ToString();
-                txtGiamGia.Text = row.Cells["GiamGia"].Value?.ToString();
-
-                if (DateTime.TryParse(row.Cells["NgayLap"].Value?.ToString(), out DateTime ngayLap))
-                    dtpNgayLap.Value = ngayLap;
-
-                //txtTongTien.Text = row.Cells["TongTien"].Value?.ToString();
-                //txtVAT.Text = row.Cells["VAT"].Value?.ToString();
-                //txtThanhToan.Text = row.Cells["ThanhToan"].Value?.ToString();
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            HoaDon hd = new HoaDon
-            {
-                MaHoaDon = txtMaHoaDon.Text.Trim(),
-                MaKhachHang = txtMaKhachHang.Text.Trim(),
-                MaSanPham = txtMaSanPham.Text.Trim(),
-                NgayLap = dtpNgayLap.Value
-            };
-
-
-            if (string.IsNullOrWhiteSpace(hd.MaHoaDon))
-            {
-                MessageBox.Show("Mã hóa đơn không được để trống.");
-                return;
-            }
-
-   
-            if (!int.TryParse(txtSoLuong.Text.Trim(), out int soLuong))
-            {
-                MessageBox.Show("Số lượng không hợp lệ.");
-                return;
-            }
-            hd.SoLuong = soLuong;
-
-           
-            if (!decimal.TryParse(txtDonGia.Text.Trim(), out decimal donGia))
-            {
-                MessageBox.Show("Đơn giá không hợp lệ.");
-                return;
-            }
-            hd.DonGia = donGia;
-
-           
-            if (!int.TryParse(txtGiamGia.Text.Trim(), out int giamGia))
-            {
-                MessageBox.Show("Giảm giá không hợp lệ.");
-                return;
-            }
-            hd.GiamGia = giamGia;
-
-            
-            hd.TongTien = soLuong * donGia * (1 - giamGia / 100m);
-            hd.VAT = Math.Round(hd.TongTien * 0.1m, 2);
-            hd.ThanhToan = hd.TongTien + hd.VAT;
-
-         
-            if (HDVM.ThemHoaDon(hd))
-            {
-                MessageBox.Show("Thêm hóa đơn thành công!");
-            }
-            else
-            {
-                MessageBox.Show("Thêm thất bại!");
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string maHoaDon = txtMaHoaDon.Text.Trim();
-            string maKhachHang = txtMaKhachHang.Text.Trim();
-            string maSanPham = txtMaSanPham.Text.Trim();
-            DateTime ngayLap = dtpNgayLap.Value;
-
-            if (string.IsNullOrEmpty(maHoaDon) || string.IsNullOrEmpty(maKhachHang) || string.IsNullOrEmpty(maSanPham) ||
-                string.IsNullOrEmpty(txtSoLuong.Text) || string.IsNullOrEmpty(txtDonGia.Text) || string.IsNullOrEmpty(txtGiamGia.Text))
-            {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
-                return;
-            }
-
-            if (!int.TryParse(txtSoLuong.Text.Trim(), out int soLuong))
-            {
-                MessageBox.Show("Số lượng không hợp lệ.");
-                return;
-            }
-
-            if (!decimal.TryParse(txtDonGia.Text.Trim(), out decimal donGia))
-            {
-                MessageBox.Show("Đơn giá không hợp lệ.");
-                return;
-            }
-
-            if (!int.TryParse(txtGiamGia.Text.Trim(), out int giamGia))
-            {
-                MessageBox.Show("Giảm giá không hợp lệ.");
-                return;
-            }
-
-            decimal tongTien = soLuong * donGia * (1 - giamGia / 100m);
-            decimal vat = Math.Round(tongTien * 0.1m, 2);
-            decimal thanhToan = tongTien + vat;
-
-            HDVM.SuaHoaDon(maHoaDon, maKhachHang, maSanPham, soLuong, donGia, ngayLap, giamGia, tongTien, vat, thanhToan);
-
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            LamMoiThongTinHoaDon();
-            HienThiHoaDon();
-        }
-
-        private void btnXoa_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
-            {
-                string maHoaDon = dataGridView1.SelectedRows[0].Cells["MaHoaDon"].Value.ToString();
-                HDVM.XoaHoaDon(maHoaDon);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn hóa đơn cần xóa.");
-            }
-
+            txtTongTien.Text = "0.00";
+            txtVAT.Text = "0.00";
+            txtThanhToan.Text = "0.00";
         }
     }
 }

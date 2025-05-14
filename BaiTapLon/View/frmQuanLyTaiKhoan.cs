@@ -1,175 +1,180 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
     public partial class frmQuanLyTaiKhoan : Form
     {
-        private TaiKhoanVM TKVM = new TaiKhoanVM();
-        BindingSource bindingSource = new BindingSource();
+        private readonly TaiKhoanVM viewModel;
+
         public frmQuanLyTaiKhoan()
         {
             InitializeComponent();
+            viewModel = new TaiKhoanVM();
+            SetupDataGridView();
+            LoadTaiKhoanData();
+        }
+
+        private void SetupDataGridView()
+        {
+            dgvTaiKhoan.AutoGenerateColumns = false;
+            dgvTaiKhoan.DataSource = viewModel.List;
+            dgvTaiKhoan.Columns.Clear();
+            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "MaNhanVien",
+                HeaderText = "Mã Nhân Viên"
+            });
+            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "TenDangNhap",
+                HeaderText = "Tên Đăng Nhập"
+            });
+            dgvTaiKhoan.SelectionChanged += DgvTaiKhoan_SelectionChanged;
+        }
+
+        private void LoadTaiKhoanData()
+        {
+            viewModel.List.Clear();
+            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(@"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True"))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = "SELECT * FROM TaiKhoan";
+                    using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sql, conn))
+                    {
+                        using (System.Data.SqlClient.SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                viewModel.List.Add(new TaiKhoan
+                                {
+                                    MaNhanVien = reader["MaNhanVien"].ToString(),
+                                    TenDangNhap = reader["TenDangNhap"].ToString(),
+                                    MatKhau = reader["MatKhau"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi tải danh sách tài khoản: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
+            string maNhanVien = txtMaNhanVien.Text.Trim();
+            string tenDangNhap = txtTenDangNhap.Text.Trim();
+            string matKhau = txtMatKhau.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(maNhanVien) || string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin tài khoản.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             TaiKhoan tk = new TaiKhoan
             {
-                TenDangNhap = txtTenDangNhap.Text.Trim(),
-                MatKhau = txtMatKhau.Text.Trim(),
-                MaNhanVien = txtMaNhanVien.Text.Trim()
+                MaNhanVien = maNhanVien,
+                TenDangNhap = tenDangNhap,
+                MatKhau = matKhau
             };
 
-            if (TKVM.ThemTaiKhoan(tk))
+            if (viewModel.ThemTaiKhoan(tk))
             {
-                MessageBox.Show("Thêm tài khoản thành công!");
+                MessageBox.Show("Thêm tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadTaiKhoanData();
+                ClearInputs();
             }
-            else
-            {
-                MessageBox.Show("Thêm tài khoản thất bại!");
-            }
-
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            string maNhanVien = txtMaNhanVien.Text.Trim();
             string tenDangNhap = txtTenDangNhap.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
-            string maNhanVien = txtMaNhanVien.Text.Trim();
 
-            if (string.IsNullOrEmpty(tenDangNhap) || string.IsNullOrEmpty(matKhau) || string.IsNullOrEmpty(maNhanVien))
+            if (string.IsNullOrWhiteSpace(maNhanVien) || string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin tài khoản.");
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin tài khoản.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            TKVM.SuaTaiKhoan(maNhanVien, tenDangNhap, matKhau);
-
+            viewModel.SuaTaiKhoan(maNhanVien, tenDangNhap, matKhau);
+            LoadTaiKhoanData();
+            ClearInputs();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            string maNhanVien = txtMaNhanVien.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(maNhanVien))
             {
-                string maNhanVien = dataGridView1.SelectedRows[0].Cells["MaNhanVien"].Value.ToString();
+                MessageBox.Show("Vui lòng nhập mã nhân viên để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                DialogResult result = MessageBox.Show(
-                    $"Bạn có chắc chắn muốn xóa tài khoản có tên đăng nhập \"{maNhanVien}\" không?",
-                    "Xác nhận xóa",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
+            if (MessageBox.Show("Bạn có chắc muốn xóa tài khoản này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                viewModel.XoaTaiKhoan(maNhanVien);
+                LoadTaiKhoanData();
+                ClearInputs();
+            }
+        }
 
-                if (result == DialogResult.Yes)
-                {
-                    TKVM.XoaTaiKhoan(maNhanVien);
-                }
+        private void btnTim_Click(object sender, EventArgs e)
+        {
+            string maNhanVien = txtMaNhanVien.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(maNhanVien))
+            {
+                MessageBox.Show("Vui lòng nhập mã nhân viên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            TaiKhoan tk = viewModel.LayTaiKhoanTheoMaNhanVien(maNhanVien);
+            if (tk != null)
+            {
+                txtTenDangNhap.Text = tk.TenDangNhap;
+                txtMatKhau.Text = tk.MatKhau; // Note: Password is hashed, consider showing a placeholder or handling differently
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn tài khoản cần xóa.");
+                MessageBox.Show("Không tìm thấy tài khoản với mã nhân viên này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearInputs();
             }
-
         }
 
-        private void btnTimKiem_Click(object sender, EventArgs e)
+        private void btnThoat_Click(object sender, EventArgs e)
         {
-            string maNhanVien = txtMaNhanVien.Text.Trim();
-            if (string.IsNullOrEmpty(maNhanVien))
-            {
-                MessageBox.Show("Vui lòng nhập mã nhân viên cần tìm kiếm.");
-                return;
-            }
-
-            TaiKhoan tk = TKVM.LayTaiKhoanTheoMaNhanVien(maNhanVien);
-            if (tk == null)
-            {
-                MessageBox.Show("Không tìm thấy tài khoản với mã nhân viên này.");
-                return;
-            }
-
-            txtTenDangNhap.Text = tk.TenDangNhap;
-            txtMatKhau.Text = tk.MatKhau;
-            txtMaNhanVien.Text = tk.MaNhanVien;
-
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Cells["MaNhanVien"].Value != null &&
-                    row.Cells["MaNhanVien"].Value.ToString().Equals(maNhanVien, StringComparison.OrdinalIgnoreCase))
-                {
-                    row.Selected = true;
-                    dataGridView1.CurrentCell = row.Cells[0];
-                    break;
-                }
-            }
-
+            this.Close();
+            frmDangNhap frm = new frmDangNhap();
+            frm.Show();
         }
-        private void HienThiTaiKhoan()
+
+        private void DgvTaiKhoan_SelectionChanged(object sender, EventArgs e)
         {
-            bindingSource.Clear();
-            BindingList<TaiKhoan> taiKhoanList = TKVM.LayTatCaTaiKhoan();
-            bindingSource.DataSource = taiKhoanList;
+            if (dgvTaiKhoan.SelectedRows.Count > 0)
+            {
+                TaiKhoan selectedTaiKhoan = (TaiKhoan)dgvTaiKhoan.SelectedRows[0].DataBoundItem;
+                txtMaNhanVien.Text = selectedTaiKhoan.MaNhanVien;
+                txtTenDangNhap.Text = selectedTaiKhoan.TenDangNhap;
+                txtMatKhau.Text = selectedTaiKhoan.MatKhau; // Note: Password is hashed
+            }
         }
-        private void LamMoiThongTinTaiKhoan()
+
+        private void ClearInputs()
         {
+            txtMaNhanVien.Clear();
             txtTenDangNhap.Clear();
             txtMatKhau.Clear();
-            txtMaNhanVien.Clear();
-            txtTenDangNhap.Focus();
-        }
-
-        private void frmQuanLyTaiKhoan_Load(object sender, EventArgs e)
-        {
-            HienThiTaiKhoan();
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView1.DataSource = bindingSource;
-            LamMoiThongTinTaiKhoan();
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            HienThiTaiKhoan();
-            LamMoiThongTinTaiKhoan();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-
-                dataGridView1.Rows[e.RowIndex].Selected = true;
-
- 
-                var maNhanVienValue = dataGridView1.Rows[e.RowIndex].Cells["MaNhanVien"].Value;
-
-
-                if (maNhanVienValue != null && !string.IsNullOrEmpty(maNhanVienValue.ToString()))
-                {
-                    string maNhanVien = maNhanVienValue.ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Mã nhân viên không hợp lệ.");
-                    return;
-                }
-
-
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
-                txtTenDangNhap.Text = row.Cells["TenDangNhap"].Value.ToString();
-                txtMatKhau.Text = row.Cells["MatKhau"].Value.ToString();
-                txtMaNhanVien.Text = row.Cells["MaNhanVien"].Value.ToString();
-            }
-
         }
     }
 }

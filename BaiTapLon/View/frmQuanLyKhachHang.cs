@@ -1,29 +1,140 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
     public partial class frmQuanLyKhachHang : Form
     {
-        KhachHangVM KHVM = new KhachHangVM();
-        BindingSource bindingSource = new BindingSource();
+        private readonly KhachHangVM viewModel;
+
         public frmQuanLyKhachHang()
         {
             InitializeComponent();
+            viewModel = new KhachHangVM();
+            SetupDataGridView();
+            LoadKhachHangData();
+        }
+
+        private void SetupDataGridView()
+        {
+            dgvKhachHang.AutoGenerateColumns = false;
+            dgvKhachHang.DataSource = viewModel.KhachHangList;
+            dgvKhachHang.Columns.Clear();
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaKhachHang", HeaderText = "Mã Khách Hàng" });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenKhachHang", HeaderText = "Tên Khách Hàng" });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoDienThoai", HeaderText = "Số Điện Thoại" });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DiaChi", HeaderText = "Địa Chỉ" });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", HeaderText = "Email" });
+            dgvKhachHang.SelectionChanged += DgvKhachHang_SelectionChanged;
+        }
+
+        private void LoadKhachHangData()
+        {
+            viewModel.LayTatCaKhachHang();
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            KhachHang kh = new KhachHang
+            if (!ValidateInputs()) return;
+
+            KhachHang kh = CreateKhachHangFromInputs();
+            if (viewModel.ThemKhachHang(kh))
+            {
+                ClearInputs();
+            }
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            string maKhachHang = txtMaKhachHang.Text.Trim();
+            string tenKhachHang = txtTenKhachHang.Text.Trim();
+            string soDienThoai = txtSoDienThoai.Text.Trim();
+            string diaChi = txtDiaChi.Text.Trim();
+            string email = txtEmail.Text.Trim();
+
+            viewModel.SuaKhachHang(maKhachHang, tenKhachHang, soDienThoai, diaChi, email);
+            ClearInputs();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            string maKhachHang = txtMaKhachHang.Text.Trim();
+            if (string.IsNullOrEmpty(maKhachHang))
+            {
+                MessageBox.Show("Vui lòng nhập mã khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có chắc muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                viewModel.XoaKhachHang(maKhachHang);
+                ClearInputs();
+            }
+        }
+
+        private void btnTim_Click(object sender, EventArgs e)
+        {
+            string keyword = txtMaKhachHang.Text.Trim();
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập mã khách hàng hoặc tên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = viewModel.TimKiemKhachHang(keyword);
+            if (result.Count > 0)
+            {
+                dgvKhachHang.DataSource = result;
+            }
+            else
+            {
+                dgvKhachHang.DataSource = viewModel.KhachHangList;
+            }
+        }
+
+        private void btnLamMoi_Click(object sender, EventArgs e)
+        {
+            ClearInputs();
+            LoadKhachHangData();
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void DgvKhachHang_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvKhachHang.SelectedRows.Count > 0)
+            {
+                KhachHang selectedKhachHang = (KhachHang)dgvKhachHang.SelectedRows[0].DataBoundItem;
+                txtMaKhachHang.Text = selectedKhachHang.MaKhachHang;
+                txtTenKhachHang.Text = selectedKhachHang.TenKhachHang;
+                txtSoDienThoai.Text = selectedKhachHang.SoDienThoai;
+                txtDiaChi.Text = selectedKhachHang.DiaChi;
+                txtEmail.Text = selectedKhachHang.Email;
+            }
+        }
+
+        private bool ValidateInputs()
+        {
+            if (string.IsNullOrWhiteSpace(txtMaKhachHang.Text) ||
+                string.IsNullOrWhiteSpace(txtTenKhachHang.Text) ||
+                string.IsNullOrWhiteSpace(txtSoDienThoai.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ mã khách hàng, tên và số điện thoại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        private KhachHang CreateKhachHangFromInputs()
+        {
+            return new KhachHang
             {
                 MaKhachHang = txtMaKhachHang.Text.Trim(),
                 TenKhachHang = txtTenKhachHang.Text.Trim(),
@@ -31,143 +142,17 @@ namespace BaiTapLon.View
                 DiaChi = txtDiaChi.Text.Trim(),
                 Email = txtEmail.Text.Trim()
             };
-            if (string.IsNullOrWhiteSpace(kh.MaKhachHang))
-            {
-                MessageBox.Show("Mã khách hàng không được để trống.");
-                return;
-            }
-
-            if (KHVM.ThemKhachHang(kh))
-            {
-                MessageBox.Show("Thêm khách hàng thành công!");
-            }
-            else
-            {
-                MessageBox.Show("Thêm thất bại!");
-            }
-
         }
 
-        private void btnSua_Click(object sender, EventArgs e)
-        {
-            string maKhachHang = txtMaKhachHang.Text.Trim();
-            string tenKhachHang = txtTenKhachHang.Text.Trim();
-            string soDienThoai = txtSoDienThoai.Text.Trim();
-            string diaChi = txtDiaChi.Text.Trim();
-            string email = txtEmail.Text.Trim();
-
-            if (string.IsNullOrEmpty(maKhachHang) || string.IsNullOrEmpty(tenKhachHang) || string.IsNullOrEmpty(soDienThoai) ||
-                string.IsNullOrEmpty(diaChi) || string.IsNullOrEmpty(email))
-            {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
-                return;
-            }
-            KHVM.SuaKhachHang(maKhachHang, tenKhachHang, soDienThoai, diaChi, email);
-
-        }
-
-        private void btnXoa_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
-            {
-                string maKhachHang = dataGridView1.SelectedRows[0].Cells["MaKhachHang"].Value.ToString();
-                KHVM.XoaKhachHang(maKhachHang);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn khách hàng cần xóa.");
-            }
-
-        }
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            string maKhachHang = txtMaKhachHang.Text.Trim();
-            if (string.IsNullOrEmpty(maKhachHang))
-            {
-                MessageBox.Show("Vui lòng nhập mã khách hàng cần tìm kiếm.");
-                return;
-            }
-
-            KhachHang kh = KHVM.LayKhachHangTheoMa(maKhachHang);
-            if (kh == null)
-            {
-                MessageBox.Show("Không tìm thấy khách hàng.");
-                return;
-            }
-
-            txtTenKhachHang.Text = kh.TenKhachHang;
-            txtSoDienThoai.Text = kh.SoDienThoai;
-            txtDiaChi.Text = kh.DiaChi;
-            txtEmail.Text = kh.Email;
-
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Cells["MaKhachHang"].Value != null &&
-                    row.Cells["MaKhachHang"].Value.ToString().Equals(maKhachHang, StringComparison.OrdinalIgnoreCase))
-                {
-                    row.Selected = true;
-                    dataGridView1.CurrentCell = row.Cells[0]; 
-                    break;
-                }
-            }
-
-        }
-        private void LamMoiThongTinKhachHang()
+        private void ClearInputs()
         {
             txtMaKhachHang.Clear();
             txtTenKhachHang.Clear();
             txtSoDienThoai.Clear();
             txtDiaChi.Clear();
             txtEmail.Clear();
-            txtMaKhachHang.Focus();
-        }
-        private void HienThiKhachHang()
-        {
-            bindingSource.Clear();
-            BindingList<KhachHang> KhachHangList = KHVM.LayTatCaKhachHang();
-            bindingSource.DataSource = KhachHangList;
         }
 
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            HienThiKhachHang();
-            LamMoiThongTinKhachHang();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                dataGridView1.Rows[e.RowIndex].Selected = true;
-
-                var maKhachHangValue = dataGridView1.Rows[e.RowIndex].Cells["MaKhachHang"].Value;
-
-                if (maKhachHangValue != null && !string.IsNullOrEmpty(maKhachHangValue.ToString()))
-                {
-                    string maKhachHang = maKhachHangValue.ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Mã khách hàng không hợp lệ.");
-                }
-
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
-                txtMaKhachHang.Text = row.Cells["MaKhachHang"].Value.ToString();
-                txtTenKhachHang.Text = row.Cells["TenKhachHang"].Value.ToString();
-                txtSoDienThoai.Text = row.Cells["SoDienThoai"].Value.ToString();
-                txtDiaChi.Text = row.Cells["DiaChi"].Value.ToString();
-                txtEmail.Text = row.Cells["Email"].Value.ToString();
-            }
-
-        }
-
-        private void frmQuanLyKhachHang_Load(object sender, EventArgs e)
-        {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView1.DataSource = bindingSource;
-            HienThiKhachHang();
-        }
+        
     }
 }

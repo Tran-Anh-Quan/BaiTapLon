@@ -1,16 +1,11 @@
-﻿namespace BaiTapLon.View
+﻿using System.Windows.Forms;
+
+namespace BaiTapLon.View
 {
     partial class frmChiTietHoaDon
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,372 +15,333 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlHeader = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.pnlCustomerInfo = new System.Windows.Forms.Panel();
+            this.btnXuatBaoCao = new System.Windows.Forms.Button();
+            this.btnKiemTraKH = new System.Windows.Forms.Button();
+            this.txtDiaChi = new System.Windows.Forms.TextBox();
+            this.lblDiaChi = new System.Windows.Forms.Label();
+            this.txtDienThoai = new System.Windows.Forms.TextBox();
+            this.lblDienThoai = new System.Windows.Forms.Label();
+            this.txtTenKH = new System.Windows.Forms.TextBox();
+            this.lblTenKH = new System.Windows.Forms.Label();
+            this.dtpNgayLap = new System.Windows.Forms.DateTimePicker();
+            this.lblNgayLap = new System.Windows.Forms.Label();
+            this.txtMaHD = new System.Windows.Forms.TextBox();
+            this.lblMaHD = new System.Windows.Forms.Label();
+            this.pnlInvoiceDetails = new System.Windows.Forms.Panel();
+            this.dgvHoaDon = new System.Windows.Forms.DataGridView();
+            this.lblInvoiceDetails = new System.Windows.Forms.Label();
+            this.pnlSummary = new System.Windows.Forms.Panel();
+            this.lblThanhToanValue = new System.Windows.Forms.Label();
+            this.lblVATValue = new System.Windows.Forms.Label();
+            this.lblTongTienValue = new System.Windows.Forms.Label();
             this.lblThanhToan = new System.Windows.Forms.Label();
             this.lblVAT = new System.Windows.Forms.Label();
             this.lblTongTien = new System.Windows.Forms.Label();
-            this.lblThanhToan_Value = new System.Windows.Forms.Label();
-            this.lblVAT_Value = new System.Windows.Forms.Label();
-            this.lblTongTien_Value = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.dgvHoaDon = new System.Windows.Forms.DataGridView();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnKiemTraKH = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.txtDiaChi = new System.Windows.Forms.TextBox();
-            this.txtDienThoai = new System.Windows.Forms.TextBox();
-            this.txtTenKH = new System.Windows.Forms.TextBox();
             this.btnThanhToan = new System.Windows.Forms.Button();
-            this.dtpNgay = new System.Windows.Forms.DateTimePicker();
-            this.txtSoHD = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.pnlHeader.SuspendLayout();
+            this.pnlCustomerInfo.SuspendLayout();
+            this.pnlInvoiceDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.pnlSummary.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlHeader
             // 
-            this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Location = new System.Drawing.Point(12, 6);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(776, 547);
-            this.panel1.TabIndex = 3;
+            this.pnlHeader.Controls.Add(this.lblTitle);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Size = new System.Drawing.Size(900, 50);
+            this.pnlHeader.TabIndex = 0;
             // 
-            // panel3
+            // lblTitle
             // 
-            this.panel3.Controls.Add(this.lblThanhToan);
-            this.panel3.Controls.Add(this.lblVAT);
-            this.panel3.Controls.Add(this.lblTongTien);
-            this.panel3.Controls.Add(this.lblThanhToan_Value);
-            this.panel3.Controls.Add(this.lblVAT_Value);
-            this.panel3.Controls.Add(this.lblTongTien_Value);
-            this.panel3.Controls.Add(this.label8);
-            this.panel3.Controls.Add(this.label7);
-            this.panel3.Controls.Add(this.label6);
-            this.panel3.Controls.Add(this.dgvHoaDon);
-            this.panel3.Controls.Add(this.label5);
-            this.panel3.Location = new System.Drawing.Point(14, 200);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(747, 339);
-            this.panel3.TabIndex = 1;
+            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(900, 50);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "Quản lý hóa đơn bán hàng";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblThanhToan
+            // pnlCustomerInfo
             // 
-            this.lblThanhToan.AutoSize = true;
-            this.lblThanhToan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblThanhToan.Location = new System.Drawing.Point(662, 307);
-            this.lblThanhToan.Name = "lblThanhToan";
-            this.lblThanhToan.Size = new System.Drawing.Size(61, 18);
-            this.lblThanhToan.TabIndex = 19;
-            this.lblThanhToan.Text = "label13";
+            this.pnlCustomerInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlCustomerInfo.Controls.Add(this.btnXuatBaoCao);
+            this.pnlCustomerInfo.Controls.Add(this.btnKiemTraKH);
+            this.pnlCustomerInfo.Controls.Add(this.txtDiaChi);
+            this.pnlCustomerInfo.Controls.Add(this.lblDiaChi);
+            this.pnlCustomerInfo.Controls.Add(this.txtDienThoai);
+            this.pnlCustomerInfo.Controls.Add(this.lblDienThoai);
+            this.pnlCustomerInfo.Controls.Add(this.txtTenKH);
+            this.pnlCustomerInfo.Controls.Add(this.lblTenKH);
+            this.pnlCustomerInfo.Controls.Add(this.dtpNgayLap);
+            this.pnlCustomerInfo.Controls.Add(this.lblNgayLap);
+            this.pnlCustomerInfo.Controls.Add(this.txtMaHD);
+            this.pnlCustomerInfo.Controls.Add(this.lblMaHD);
+            this.pnlCustomerInfo.Location = new System.Drawing.Point(20, 70);
+            this.pnlCustomerInfo.Name = "pnlCustomerInfo";
+            this.pnlCustomerInfo.Size = new System.Drawing.Size(860, 150);
+            this.pnlCustomerInfo.TabIndex = 1;
             // 
-            // lblVAT
+            // btnXuatBaoCao
             // 
-            this.lblVAT.AutoSize = true;
-            this.lblVAT.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVAT.Location = new System.Drawing.Point(662, 277);
-            this.lblVAT.Name = "lblVAT";
-            this.lblVAT.Size = new System.Drawing.Size(61, 18);
-            this.lblVAT.TabIndex = 18;
-            this.lblVAT.Text = "label12";
+            this.btnXuatBaoCao.Location = new System.Drawing.Point(700, 66);
+            this.btnXuatBaoCao.Name = "btnXuatBaoCao";
+            this.btnXuatBaoCao.Size = new System.Drawing.Size(120, 30);
+            this.btnXuatBaoCao.TabIndex = 11;
+            this.btnXuatBaoCao.Text = "Xuất báo cáo";
+            this.btnXuatBaoCao.UseVisualStyleBackColor = true;
             // 
-            // lblTongTien
+            // btnKiemTraKH
             // 
-            this.lblTongTien.AutoSize = true;
-            this.lblTongTien.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTongTien.Location = new System.Drawing.Point(662, 249);
-            this.lblTongTien.Name = "lblTongTien";
-            this.lblTongTien.Size = new System.Drawing.Size(61, 18);
-            this.lblTongTien.TabIndex = 17;
-            this.lblTongTien.Text = "label11";
+            this.btnKiemTraKH.Location = new System.Drawing.Point(700, 30);
+            this.btnKiemTraKH.Name = "btnKiemTraKH";
+            this.btnKiemTraKH.Size = new System.Drawing.Size(120, 30);
+            this.btnKiemTraKH.TabIndex = 10;
+            this.btnKiemTraKH.Text = "Kiểm tra";
+            this.btnKiemTraKH.UseVisualStyleBackColor = true;
             // 
-            // lblThanhToan_Value
+            // txtDiaChi
             // 
-            this.lblThanhToan_Value.AutoSize = true;
-            this.lblThanhToan_Value.Location = new System.Drawing.Point(676, 307);
-            this.lblThanhToan_Value.Name = "lblThanhToan_Value";
-            this.lblThanhToan_Value.Size = new System.Drawing.Size(0, 16);
-            this.lblThanhToan_Value.TabIndex = 16;
+            this.txtDiaChi.Location = new System.Drawing.Point(450, 66);
+            this.txtDiaChi.Name = "txtDiaChi";
+            this.txtDiaChi.Size = new System.Drawing.Size(200, 22);
+            this.txtDiaChi.TabIndex = 9;
             // 
-            // lblVAT_Value
+            // lblDiaChi
             // 
-            this.lblVAT_Value.AutoSize = true;
-            this.lblVAT_Value.Location = new System.Drawing.Point(676, 277);
-            this.lblVAT_Value.Name = "lblVAT_Value";
-            this.lblVAT_Value.Size = new System.Drawing.Size(0, 16);
-            this.lblVAT_Value.TabIndex = 15;
+            this.lblDiaChi.AutoSize = true;
+            this.lblDiaChi.Location = new System.Drawing.Point(350, 66);
+            this.lblDiaChi.Name = "lblDiaChi";
+            this.lblDiaChi.Size = new System.Drawing.Size(50, 16);
+            this.lblDiaChi.TabIndex = 8;
+            this.lblDiaChi.Text = "Địa chỉ:";
             // 
-            // lblTongTien_Value
+            // txtDienThoai
             // 
-            this.lblTongTien_Value.AutoSize = true;
-            this.lblTongTien_Value.Location = new System.Drawing.Point(676, 247);
-            this.lblTongTien_Value.Name = "lblTongTien_Value";
-            this.lblTongTien_Value.Size = new System.Drawing.Size(0, 16);
-            this.lblTongTien_Value.TabIndex = 14;
+            this.txtDienThoai.Location = new System.Drawing.Point(450, 30);
+            this.txtDienThoai.Name = "txtDienThoai";
+            this.txtDienThoai.Size = new System.Drawing.Size(200, 22);
+            this.txtDienThoai.TabIndex = 7;
             // 
-            // label8
+            // lblDienThoai
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(495, 307);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(150, 18);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "Số tiền thanh toán:";
+            this.lblDienThoai.AutoSize = true;
+            this.lblDienThoai.Location = new System.Drawing.Point(350, 33);
+            this.lblDienThoai.Name = "lblDienThoai";
+            this.lblDienThoai.Size = new System.Drawing.Size(88, 16);
+            this.lblDienThoai.TabIndex = 6;
+            this.lblDienThoai.Text = "Số điện thoại:";
             // 
-            // label7
+            // txtTenKH
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(495, 277);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(134, 18);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Thuế VAT (10%):";
+            this.txtTenKH.Location = new System.Drawing.Point(120, 90);
+            this.txtTenKH.Name = "txtTenKH";
+            this.txtTenKH.Size = new System.Drawing.Size(200, 22);
+            this.txtTenKH.TabIndex = 5;
             // 
-            // label6
+            // lblTenKH
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(495, 247);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(149, 18);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Tổng tiền hóa đơn:";
+            this.lblTenKH.AutoSize = true;
+            this.lblTenKH.Location = new System.Drawing.Point(20, 93);
+            this.lblTenKH.Name = "lblTenKH";
+            this.lblTenKH.Size = new System.Drawing.Size(80, 16);
+            this.lblTenKH.TabIndex = 4;
+            this.lblTenKH.Text = "Khách hàng:";
+            // 
+            // dtpNgayLap
+            // 
+            this.dtpNgayLap.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpNgayLap.Location = new System.Drawing.Point(120, 60);
+            this.dtpNgayLap.Name = "dtpNgayLap";
+            this.dtpNgayLap.Size = new System.Drawing.Size(200, 22);
+            this.dtpNgayLap.TabIndex = 3;
+            // 
+            // lblNgayLap
+            // 
+            this.lblNgayLap.AutoSize = true;
+            this.lblNgayLap.Location = new System.Drawing.Point(20, 63);
+            this.lblNgayLap.Name = "lblNgayLap";
+            this.lblNgayLap.Size = new System.Drawing.Size(65, 16);
+            this.lblNgayLap.TabIndex = 2;
+            this.lblNgayLap.Text = "Ngày lập:";
+            // 
+            // txtMaHD
+            // 
+            this.txtMaHD.Location = new System.Drawing.Point(120, 30);
+            this.txtMaHD.Name = "txtMaHD";
+            this.txtMaHD.Size = new System.Drawing.Size(200, 22);
+            this.txtMaHD.TabIndex = 1;
+            // 
+            // lblMaHD
+            // 
+            this.lblMaHD.AutoSize = true;
+            this.lblMaHD.Location = new System.Drawing.Point(20, 33);
+            this.lblMaHD.Name = "lblMaHD";
+            this.lblMaHD.Size = new System.Drawing.Size(81, 16);
+            this.lblMaHD.TabIndex = 0;
+            this.lblMaHD.Text = "Mã hóa đơn:";
+            // 
+            // pnlInvoiceDetails
+            // 
+            this.pnlInvoiceDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlInvoiceDetails.Controls.Add(this.dgvHoaDon);
+            this.pnlInvoiceDetails.Controls.Add(this.lblInvoiceDetails);
+            this.pnlInvoiceDetails.Location = new System.Drawing.Point(20, 240);
+            this.pnlInvoiceDetails.Name = "pnlInvoiceDetails";
+            this.pnlInvoiceDetails.Size = new System.Drawing.Size(860, 300);
+            this.pnlInvoiceDetails.TabIndex = 2;
             // 
             // dgvHoaDon
             // 
             this.dgvHoaDon.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvHoaDon.Location = new System.Drawing.Point(24, 60);
+            this.dgvHoaDon.Location = new System.Drawing.Point(20, 50);
             this.dgvHoaDon.Name = "dgvHoaDon";
             this.dgvHoaDon.RowHeadersWidth = 51;
-            this.dgvHoaDon.RowTemplate.Height = 24;
-            this.dgvHoaDon.Size = new System.Drawing.Size(703, 171);
-            this.dgvHoaDon.TabIndex = 10;
+            this.dgvHoaDon.RowTemplate.Height = 29;
+            this.dgvHoaDon.Size = new System.Drawing.Size(820, 230);
+            this.dgvHoaDon.TabIndex = 1;
             // 
-            // label5
+            // lblInvoiceDetails
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(21, 25);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(127, 18);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Chi tiết hóa đơn";
+            this.lblInvoiceDetails.AutoSize = true;
+            this.lblInvoiceDetails.Location = new System.Drawing.Point(20, 20);
+            this.lblInvoiceDetails.Name = "lblInvoiceDetails";
+            this.lblInvoiceDetails.Size = new System.Drawing.Size(98, 16);
+            this.lblInvoiceDetails.TabIndex = 0;
+            this.lblInvoiceDetails.Text = "Chi tiết hóa đơn";
             // 
-            // panel2
+            // pnlSummary
             // 
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.btnKiemTraKH);
-            this.panel2.Controls.Add(this.label10);
-            this.panel2.Controls.Add(this.label9);
-            this.panel2.Controls.Add(this.txtDiaChi);
-            this.panel2.Controls.Add(this.txtDienThoai);
-            this.panel2.Controls.Add(this.txtTenKH);
-            this.panel2.Controls.Add(this.btnThanhToan);
-            this.panel2.Controls.Add(this.dtpNgay);
-            this.panel2.Controls.Add(this.txtSoHD);
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Location = new System.Drawing.Point(14, 6);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(747, 188);
-            this.panel2.TabIndex = 0;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            this.pnlSummary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSummary.Controls.Add(this.lblThanhToanValue);
+            this.pnlSummary.Controls.Add(this.lblVATValue);
+            this.pnlSummary.Controls.Add(this.lblTongTienValue);
+            this.pnlSummary.Controls.Add(this.lblThanhToan);
+            this.pnlSummary.Controls.Add(this.lblVAT);
+            this.pnlSummary.Controls.Add(this.lblTongTien);
+            this.pnlSummary.Location = new System.Drawing.Point(20, 560);
+            this.pnlSummary.Name = "pnlSummary";
+            this.pnlSummary.Size = new System.Drawing.Size(600, 80);
+            this.pnlSummary.TabIndex = 3;
             // 
-            // button1
+            // lblThanhToanValue
             // 
-            this.button1.Location = new System.Drawing.Point(616, 102);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Xuất báo cáo";
-            this.button1.UseVisualStyleBackColor = true;
+            this.lblThanhToanValue.AutoSize = true;
+            this.lblThanhToanValue.Location = new System.Drawing.Point(450, 50);
+            this.lblThanhToanValue.Name = "lblThanhToanValue";
+            this.lblThanhToanValue.Size = new System.Drawing.Size(0, 16);
+            this.lblThanhToanValue.TabIndex = 5;
             // 
-            // btnKiemTraKH
+            // lblVATValue
             // 
-            this.btnKiemTraKH.Location = new System.Drawing.Point(612, 62);
-            this.btnKiemTraKH.Name = "btnKiemTraKH";
-            this.btnKiemTraKH.Size = new System.Drawing.Size(84, 24);
-            this.btnKiemTraKH.TabIndex = 14;
-            this.btnKiemTraKH.Text = "Kiểm tra";
-            this.btnKiemTraKH.UseVisualStyleBackColor = true;
+            this.lblVATValue.AutoSize = true;
+            this.lblVATValue.Location = new System.Drawing.Point(450, 30);
+            this.lblVATValue.Name = "lblVATValue";
+            this.lblVATValue.Size = new System.Drawing.Size(0, 16);
+            this.lblVATValue.TabIndex = 4;
             // 
-            // label10
+            // lblTongTienValue
             // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(340, 107);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 18);
-            this.label10.TabIndex = 13;
-            this.label10.Text = "Địa chỉ";
+            this.lblTongTienValue.AutoSize = true;
+            this.lblTongTienValue.Location = new System.Drawing.Point(450, 10);
+            this.lblTongTienValue.Name = "lblTongTienValue";
+            this.lblTongTienValue.Size = new System.Drawing.Size(0, 16);
+            this.lblTongTienValue.TabIndex = 3;
             // 
-            // label9
+            // lblThanhToan
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(340, 64);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(107, 18);
-            this.label9.TabIndex = 12;
-            this.label9.Text = "Số điện thoại";
+            this.lblThanhToan.AutoSize = true;
+            this.lblThanhToan.Location = new System.Drawing.Point(250, 50);
+            this.lblThanhToan.Name = "lblThanhToan";
+            this.lblThanhToan.Size = new System.Drawing.Size(115, 16);
+            this.lblThanhToan.TabIndex = 2;
+            this.lblThanhToan.Text = "Số tiền thanh toán:";
             // 
-            // txtDiaChi
+            // lblVAT
             // 
-            this.txtDiaChi.Location = new System.Drawing.Point(460, 107);
-            this.txtDiaChi.Name = "txtDiaChi";
-            this.txtDiaChi.Size = new System.Drawing.Size(123, 22);
-            this.txtDiaChi.TabIndex = 11;
+            this.lblVAT.AutoSize = true;
+            this.lblVAT.Location = new System.Drawing.Point(250, 30);
+            this.lblVAT.Name = "lblVAT";
+            this.lblVAT.Size = new System.Drawing.Size(108, 16);
+            this.lblVAT.TabIndex = 1;
+            this.lblVAT.Text = "Thuế VAT (10%):";
             // 
-            // txtDienThoai
+            // lblTongTien
             // 
-            this.txtDienThoai.Location = new System.Drawing.Point(460, 64);
-            this.txtDienThoai.Name = "txtDienThoai";
-            this.txtDienThoai.Size = new System.Drawing.Size(123, 22);
-            this.txtDienThoai.TabIndex = 10;
-            // 
-            // txtTenKH
-            // 
-            this.txtTenKH.Location = new System.Drawing.Point(153, 143);
-            this.txtTenKH.Name = "txtTenKH";
-            this.txtTenKH.Size = new System.Drawing.Size(123, 22);
-            this.txtTenKH.TabIndex = 9;
+            this.lblTongTien.AutoSize = true;
+            this.lblTongTien.Location = new System.Drawing.Point(250, 10);
+            this.lblTongTien.Name = "lblTongTien";
+            this.lblTongTien.Size = new System.Drawing.Size(118, 16);
+            this.lblTongTien.TabIndex = 0;
+            this.lblTongTien.Text = "Tổng tiền hóa đơn:";
             // 
             // btnThanhToan
             // 
-            this.btnThanhToan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnThanhToan.Location = new System.Drawing.Point(616, 141);
+            this.btnThanhToan.Location = new System.Drawing.Point(700, 570);
             this.btnThanhToan.Name = "btnThanhToan";
-            this.btnThanhToan.Size = new System.Drawing.Size(102, 33);
-            this.btnThanhToan.TabIndex = 8;
+            this.btnThanhToan.Size = new System.Drawing.Size(150, 40);
+            this.btnThanhToan.TabIndex = 4;
             this.btnThanhToan.Text = "Thanh toán";
             this.btnThanhToan.UseVisualStyleBackColor = true;
-            // 
-            // dtpNgay
-            // 
-            this.dtpNgay.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpNgay.Location = new System.Drawing.Point(154, 104);
-            this.dtpNgay.Name = "dtpNgay";
-            this.dtpNgay.Size = new System.Drawing.Size(122, 22);
-            this.dtpNgay.TabIndex = 7;
-            // 
-            // txtSoHD
-            // 
-            this.txtSoHD.Location = new System.Drawing.Point(154, 64);
-            this.txtSoHD.Name = "txtSoHD";
-            this.txtSoHD.Size = new System.Drawing.Size(122, 22);
-            this.txtSoHD.TabIndex = 6;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(21, 104);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 18);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Ngày lập";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(21, 144);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 18);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Khách hàng";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(21, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(97, 18);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Mã hóa đơn";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(270, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(198, 20);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "HÓA ĐƠN BÁN HÀNG";
             // 
             // frmChiTietHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 574);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(900, 660);
+            this.Controls.Add(this.btnThanhToan);
+            this.Controls.Add(this.pnlSummary);
+            this.Controls.Add(this.pnlInvoiceDetails);
+            this.Controls.Add(this.pnlCustomerInfo);
+            this.Controls.Add(this.pnlHeader);
             this.Name = "frmChiTietHoaDon";
-            this.Text = "Chi tiết hóa đơn";
-            this.panel1.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Quản lý hóa đơn bán hàng";
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlCustomerInfo.ResumeLayout(false);
+            this.pnlCustomerInfo.PerformLayout();
+            this.pnlInvoiceDetails.ResumeLayout(false);
+            this.pnlInvoiceDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.pnlSummary.ResumeLayout(false);
+            this.pnlSummary.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
-        #endregion
-
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label lblThanhToan;
-        private System.Windows.Forms.Label lblVAT;
-        private System.Windows.Forms.Label lblTongTien;
-        private System.Windows.Forms.Label lblThanhToan_Value;
-        private System.Windows.Forms.Label lblVAT_Value;
-        private System.Windows.Forms.Label lblTongTien_Value;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridView dgvHoaDon;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnKiemTraKH;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtDiaChi;
-        private System.Windows.Forms.TextBox txtDienThoai;
-        private System.Windows.Forms.TextBox txtTenKH;
-        private System.Windows.Forms.Button btnThanhToan;
-        private System.Windows.Forms.DateTimePicker dtpNgay;
-        private System.Windows.Forms.TextBox txtSoHD;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private Panel pnlHeader;
+        private Label lblTitle;
+        private Panel pnlCustomerInfo;
+        private TextBox txtMaHD;
+        private Label lblMaHD;
+        private DateTimePicker dtpNgayLap;
+        private Label lblNgayLap;
+        private TextBox txtTenKH;
+        private Label lblTenKH;
+        private TextBox txtDienThoai;
+        private Label lblDienThoai;
+        private TextBox txtDiaChi;
+        private Label lblDiaChi;
+        private Button btnKiemTraKH;
+        private Button btnXuatBaoCao;
+        private Panel pnlInvoiceDetails;
+        private DataGridView dgvHoaDon;
+        private Label lblInvoiceDetails;
+        private Panel pnlSummary;
+        private Label lblTongTien;
+        private Label lblTongTienValue;
+        private Label lblVAT;
+        private Label lblVATValue;
+        private Label lblThanhToan;
+        private Label lblThanhToanValue;
+        private Button btnThanhToan;
     }
 }

@@ -1,271 +1,183 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
     public partial class frmQuanLyNhanVien : Form
     {
-        private NhanVienVM NVVM = new NhanVienVM();
-        BindingSource bindingSource = new BindingSource();
+        private readonly NhanVienVM viewModel;
 
         public frmQuanLyNhanVien()
         {
             InitializeComponent();
+            viewModel = new NhanVienVM();
+            SetupDataGridView();
+            SetupComboBox();
+            LoadNhanVienData();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void SetupDataGridView()
         {
-
-            string maNhanVien = txtMaNhanVien.Text.Trim();
-            if (string.IsNullOrEmpty(maNhanVien))
-            {
-                MessageBox.Show("Vui lòng nhập mã nhân viên cần tìm kiếm.");
-                return;
-            }
-            NhanVien nv = NVVM.LayNhanVienTheoMa(maNhanVien);
-            if (nv == null)
-            {
-                MessageBox.Show("Không tìm thấy nhân viên.");
-                return;
-            }
-            txtTenNhanVien.Text = nv.TenNhanVien;
-            txtSoDienThoai.Text = nv.SoDienThoai;
-            cboGioi.Text = nv.GioiTinh;
-            cboChucVu.Text = nv.ChucVu;
-            dtpNgayVaoLam.Value = nv.NgayVaoLam;
-            txtLuong.Text = nv.Luong.ToString();
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Cells["MaNhanVien"].Value != null &&
-                    row.Cells["MaNhanVien"].Value.ToString().Equals(maNhanVien, StringComparison.OrdinalIgnoreCase))
-                {
-                    row.Selected = true;
-                    dataGridView1.CurrentCell = row.Cells[0];
-                    break;
-                }
-            }
-
+            dgvNhanVien.AutoGenerateColumns = false;
+            dgvNhanVien.DataSource = viewModel.NhanVienList;
+            dgvNhanVien.Columns.Clear();
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaNhanVien", HeaderText = "Mã Nhân Viên" });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenNhanVien", HeaderText = "Tên Nhân Viên" });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoDienThoai", HeaderText = "Số Điện Thoại" });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GioiTinh", HeaderText = "Giới Tính" });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ChucVu", HeaderText = "Chức Vụ" });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NgayVaoLam", HeaderText = "Ngày Vào Làm", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } });
+            dgvNhanVien.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Luong", HeaderText = "Lương", DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" } });
+            dgvNhanVien.SelectionChanged += DgvNhanVien_SelectionChanged;
         }
 
-        private void HienThiNhanVien()
+        private void SetupComboBox()
         {
-            bindingSource.Clear();
-            BindingList<NhanVien> NhanVienList = NVVM.LayTatCaNhanVien();
-            bindingSource.DataSource = NhanVienList;
-        }
-        private void LamMoiThongTin()    
-        {
-            txtMaNhanVien.Clear();
-            txtTenNhanVien.Clear();
-            txtSoDienThoai.Clear();
-            txtLuong.Clear();
-            cboGioi.SelectedIndex = -1;
-            cboChucVu.SelectedIndex = -1;
-            dtpNgayVaoLam.Value = DateTime.Today;
-            txtMaNhanVien.Focus();
+            cboGioiTinh.Items.Add("Nam");
+            cboGioiTinh.Items.Add("Nữ");
+            cboGioiTinh.SelectedIndex = 0;
         }
 
-        private void frmQuanLyNhanVien_Load(object sender, EventArgs e)
+        private void LoadNhanVienData()
         {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView1.DataSource = bindingSource;
-            HienThiNhanVien();
+            viewModel.LayTatCaNhanVien();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void btnThem_Click(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0)
-            {
-                dataGridView1.Rows[e.RowIndex].Selected = true;
+            if (!ValidateInputs()) return;
 
-                var maNhanVienValue = dataGridView1.Rows[e.RowIndex].Cells["MaNhanVien"].Value;
-
-                if (maNhanVienValue != null && !string.IsNullOrEmpty(maNhanVienValue.ToString()))
-                {
-                    string maNhanVien = maNhanVienValue.ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Mã nhân viên không hợp lệ.");
-                }
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
-                txtMaNhanVien.Text = row.Cells["MaNhanVien"].Value.ToString();
-                txtTenNhanVien.Text = row.Cells["TenNhanVien"].Value.ToString();
-                txtSoDienThoai.Text = row.Cells["SoDienThoai"].Value.ToString();
-                cboGioi.Text = row.Cells["GioiTinh"].Value.ToString();
-                dtpNgayVaoLam.Value = Convert.ToDateTime(row.Cells["NgayVaoLam"].Value);
-                cboChucVu.Text = row.Cells["ChucVu"].Value.ToString();
-                txtLuong.Text = row.Cells["Luong"].Value.ToString();
-            }
-          
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            NhanVien nv = new NhanVien
+            NhanVien nv = CreateNhanVienFromInputs();
+            if (viewModel.ThemNhanVien(nv))
             {
-                MaNhanVien = txtMaNhanVien.Text.Trim(),
-                TenNhanVien = txtTenNhanVien.Text.Trim(),
-                SoDienThoai = txtSoDienThoai.Text.Trim(),
-                GioiTinh = cboGioi.Text,
-                ChucVu = cboChucVu.Text,
-                NgayVaoLam = dtpNgayVaoLam.Value
-
-            };
-            if (string.IsNullOrWhiteSpace(nv.MaNhanVien))
-            {
-                MessageBox.Show("Mã Nhân Viên không được để trống.");
-                return;
-            }
-            decimal luong;
-            if (!decimal.TryParse(txtLuong.Text.Trim(), out luong))
-            {
-                MessageBox.Show("Lương không hợp lệ.");
-                return;
-            }
-            nv.Luong = luong;
-            if (NVVM.ThemNhanVien(nv))
-            {
-                MessageBox.Show("Thêm nhân viên thành công!");
-            }
-            else
-            {
-                MessageBox.Show("Thêm thất bại!");
-            }
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            HienThiNhanVien();
-            LamMoiThongTin();
-        }
-
-        private void btnXoa_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
-            {
-                string maNhanVien = dataGridView1.SelectedRows[0].Cells["MaNhanVien"].Value.ToString();
-                NVVM.XoaNhanVien(maNhanVien);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn nhân viên cần xóa.");
+                ClearInputs();
             }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            if (!ValidateInputs()) return;
+
             string maNhanVien = txtMaNhanVien.Text.Trim();
             string tenNhanVien = txtTenNhanVien.Text.Trim();
             string soDienThoai = txtSoDienThoai.Text.Trim();
-            string gioiTinh = cboGioi.Text.Trim();
-            string chucVu = cboChucVu.Text.Trim();
+            string chucVu = txtChucVu.Text.Trim();
             DateTime ngayVaoLam = dtpNgayVaoLam.Value;
-            decimal luong;
+            decimal luong = decimal.Parse(txtLuong.Text);
+            string gioiTinh = cboGioiTinh.SelectedItem.ToString();
 
-            if (string.IsNullOrEmpty(maNhanVien) || string.IsNullOrEmpty(tenNhanVien) || string.IsNullOrEmpty(soDienThoai) ||
-    string.IsNullOrEmpty(chucVu) || string.IsNullOrEmpty(txtLuong.Text) || string.IsNullOrEmpty(cboGioiTinh.Text))
+            viewModel.SuaNhanVien(maNhanVien, tenNhanVien, soDienThoai, chucVu, ngayVaoLam, luong, gioiTinh);
+            ClearInputs();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            string maNhanVien = txtMaNhanVien.Text.Trim();
+            if (string.IsNullOrEmpty(maNhanVien))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
+                MessageBox.Show("Vui lòng nhập mã nhân viên để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (!decimal.TryParse(txtLuong.Text, out luong))
+
+            if (MessageBox.Show("Bạn có chắc muốn xóa nhân viên này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                MessageBox.Show("Lương không hợp lệ.");
+                viewModel.XoaNhanVien(maNhanVien);
+                ClearInputs();
+            }
+        }
+
+        private void btnTim_Click(object sender, EventArgs e)
+        {
+            string keyword = txtMaNhanVien.Text.Trim();
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập mã nhân viên hoặc tên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            NVVM.SuaNhanVien(maNhanVien, tenNhanVien, soDienThoai, chucVu, ngayVaoLam, luong,gioiTinh);
+            var result = viewModel.TimKiemNhanVien(keyword);
+            if (result.Count > 0)
+            {
+                dgvNhanVien.DataSource = result;
+            }
+            else
+            {
+                dgvNhanVien.DataSource = viewModel.NhanVienList;
+            }
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
+        private void btnLamMoi_Click(object sender, EventArgs e)
         {
-
+            ClearInputs();
+            LoadNhanVienData();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void btnThoat_Click(object sender, EventArgs e)
         {
-
+            this.Close();
         }
 
-        private void dtpNgayVaoLam_ValueChanged(object sender, EventArgs e)
+        private void DgvNhanVien_SelectionChanged(object sender, EventArgs e)
         {
-
+            if (dgvNhanVien.SelectedRows.Count > 0)
+            {
+                NhanVien selectedNhanVien = (NhanVien)dgvNhanVien.SelectedRows[0].DataBoundItem;
+                txtMaNhanVien.Text = selectedNhanVien.MaNhanVien;
+                txtTenNhanVien.Text = selectedNhanVien.TenNhanVien;
+                txtSoDienThoai.Text = selectedNhanVien.SoDienThoai;
+                cboGioiTinh.SelectedItem = selectedNhanVien.GioiTinh;
+                txtChucVu.Text = selectedNhanVien.ChucVu;
+                dtpNgayVaoLam.Value = selectedNhanVien.NgayVaoLam;
+                txtLuong.Text = selectedNhanVien.Luong.ToString("N0");
+            }
         }
 
-        private void label6_Click(object sender, EventArgs e)
+        private bool ValidateInputs()
         {
+            if (string.IsNullOrWhiteSpace(txtMaNhanVien.Text) ||
+                string.IsNullOrWhiteSpace(txtTenNhanVien.Text) ||
+                string.IsNullOrWhiteSpace(txtSoDienThoai.Text) ||
+                string.IsNullOrWhiteSpace(txtChucVu.Text) ||
+                string.IsNullOrWhiteSpace(txtLuong.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin nhân viên.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
 
+            if (!decimal.TryParse(txtLuong.Text, out decimal luong) || luong < 0)
+            {
+                MessageBox.Show("Lương phải là số dương.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
         }
 
-        private void cboGioi_SelectedIndexChanged(object sender, EventArgs e)
+        private NhanVien CreateNhanVienFromInputs()
         {
-
+            return new NhanVien
+            {
+                MaNhanVien = txtMaNhanVien.Text.Trim(),
+                TenNhanVien = txtTenNhanVien.Text.Trim(),
+                SoDienThoai = txtSoDienThoai.Text.Trim(),
+                GioiTinh = cboGioiTinh.SelectedItem.ToString(),
+                ChucVu = txtChucVu.Text.Trim(),
+                NgayVaoLam = dtpNgayVaoLam.Value,
+                Luong = decimal.Parse(txtLuong.Text)
+            };
         }
 
-        private void cboGioiTinh_Click(object sender, EventArgs e)
+        private void ClearInputs()
         {
-
-        }
-
-        private void cboChucVu_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtSoDienThoai_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLuong_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTenNhanVien_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtMaNhanVien_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            txtMaNhanVien.Clear();
+            txtTenNhanVien.Clear();
+            txtSoDienThoai.Clear();
+            cboGioiTinh.SelectedIndex = 0;
+            txtChucVu.Clear();
+            dtpNgayVaoLam.Value = DateTime.Now;
+            txtLuong.Clear();
         }
     }
 }

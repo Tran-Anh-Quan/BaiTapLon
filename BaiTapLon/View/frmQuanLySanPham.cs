@@ -1,176 +1,128 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BaiTapLon.View
+namespace BaiTapLon
 {
     public partial class frmQuanLySanPham : Form
     {
-        private SanPhamVM SPVM = new SanPhamVM();
-        BindingSource bindingSource = new BindingSource();
+        private SanPhamVM sanPhamVM;
+
         public frmQuanLySanPham()
         {
             InitializeComponent();
+            sanPhamVM = new SanPhamVM();
+            SetupDataGridView();
+            LoadSanPhamList();
+        }
+
+        private void SetupDataGridView()
+        {
+            dgvSanPham.AutoGenerateColumns = false;
+            dgvSanPham.Columns.Clear();
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaSanPham", HeaderText = "Mã Sản Phẩm" });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenSanPham", HeaderText = "Tên Sản Phẩm" });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DonGia", HeaderText = "Đơn Giá" });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoLuongTon", HeaderText = "Số Lượng Tồn" });
+            dgvSanPham.DataSource = sanPhamVM.SanphamList;
+        }
+
+        private void LoadSanPhamList()
+        {
+            sanPhamVM.LayTatCaSanPham();
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            SanPham sp = new SanPham
+            if (string.IsNullOrWhiteSpace(txtMaSanPham.Text) || string.IsNullOrWhiteSpace(txtTenSanPham.Text))
             {
-                MaSanPham = txtMaSanPham.Text.Trim(),
-                TenSanPham = txtTenSanPham.Text.Trim(),
-                DonGia = decimal.Parse(txtDonGia.Text.Trim()),
-                SoLuongTon = int.Parse(txtSoLuongTon.Text.Trim())
+                MessageBox.Show("Vui lòng nhập đầy đủ mã và tên sản phẩm.");
+                return;
+            }
+
+            if (!decimal.TryParse(txtDonGia.Text, out decimal donGia) || !int.TryParse(txtSoLuongTon.Text, out int soLuongTon))
+            {
+                MessageBox.Show("Đơn giá và số lượng tồn phải là số hợp lệ.");
+                return;
+            }
+
+            var sanPham = new SanPham
+            {
+                MaSanPham = txtMaSanPham.Text,
+                TenSanPham = txtTenSanPham.Text,
+                DonGia = donGia,
+                SoLuongTon = soLuongTon
             };
 
-            if (SPVM.ThemSanPham(sp))
+            if (sanPhamVM.ThemSanPham(sanPham))
             {
-                MessageBox.Show("Thêm sản phẩm thành công!");
+                sanPhamVM.LayTatCaSanPham();
+                ClearInputs();
             }
-            else
-            {
-                MessageBox.Show("Thêm sản phẩm thất bại!");
-            }
-
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnSua_Click(object sender, EventArgs e)
         {
-            string maSanPham = txtMaSanPham.Text.Trim();
-            string tenSanPham = txtTenSanPham.Text.Trim();
-            decimal donGia;
-            int soLuongTon;
-
-            if (string.IsNullOrEmpty(maSanPham) || string.IsNullOrEmpty(tenSanPham) ||
-                string.IsNullOrEmpty(txtDonGia.Text) || string.IsNullOrEmpty(txtSoLuongTon.Text))
+            if (string.IsNullOrWhiteSpace(txtMaSanPham.Text))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
+                MessageBox.Show("Vui lòng nhập mã sản phẩm để sửa.");
                 return;
             }
 
-            if (!decimal.TryParse(txtDonGia.Text, out donGia))
+            if (!decimal.TryParse(txtDonGia.Text, out decimal donGia) || !int.TryParse(txtSoLuongTon.Text, out int soLuongTon))
             {
-                MessageBox.Show("Đơn giá không hợp lệ.");
+                MessageBox.Show("Đơn giá và số lượng tồn phải là số hợp lệ.");
                 return;
             }
 
-            if (!int.TryParse(txtSoLuongTon.Text, out soLuongTon))
-            {
-                MessageBox.Show("Số lượng tồn không hợp lệ.");
-                return;
-            }
-            SPVM.SuaSanPham(maSanPham, tenSanPham, donGia, soLuongTon);
-
+            sanPhamVM.SuaSanPham(txtMaSanPham.Text, txtTenSanPham.Text, donGia, soLuongTon);
+            ClearInputs();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (string.IsNullOrWhiteSpace(txtMaSanPham.Text))
             {
-                string maSanPham = dataGridView1.SelectedRows[0].Cells["MaSanPham"].Value.ToString();
-                SPVM.XoaSanPham(maSanPham);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn sản phẩm cần xóa.");
+                MessageBox.Show("Vui lòng nhập mã sản phẩm để xóa.");
+                return;
             }
 
+            sanPhamVM.XoaSanPham(txtMaSanPham.Text);
+            ClearInputs();
         }
 
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
-            string maSanPham = txtMaSanPham.Text.Trim();
-            if (string.IsNullOrEmpty(maSanPham))
-            {
-                MessageBox.Show("Vui lòng nhập mã sản phẩm cần tìm kiếm.");
-                return;
-            }
-
-            SanPham sp = SPVM.LaySanPhamTheoMa(maSanPham);
-            if (sp == null)
-            {
-                MessageBox.Show("Không tìm thấy sản phẩm.");
-                return;
-            }
-
-            txtTenSanPham.Text = sp.TenSanPham;
-            txtDonGia.Text = sp.DonGia.ToString();
-            txtSoLuongTon.Text = sp.SoLuongTon.ToString();
-
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Cells["MaSanPham"].Value != null &&
-                    row.Cells["MaSanPham"].Value.ToString().Equals(maSanPham, StringComparison.OrdinalIgnoreCase))
-                {
-                    row.Selected = true;
-                    dataGridView1.CurrentCell = row.Cells[0];
-                    break;
-                }
-            }
-
+            var result = sanPhamVM.TimKiemSanPham(txtTimKiem.Text);
+            dgvSanPham.DataSource = result;
         }
-        private void HienThiSanPham()
+
+        private void btnLamMoi_Click(object sender, EventArgs e)
         {
-            bindingSource.Clear();
-            BindingList<SanPham> sanPhamList = SPVM.LayTatCaSanPham();
-            bindingSource.DataSource = sanPhamList;
+            LoadSanPhamList();
+            ClearInputs();
+            txtTimKiem.Clear();
         }
-        private void LamMoiThongTin()
+
+        private void dgvSanPham_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvSanPham.SelectedRows.Count > 0)
+            {
+                var selectedSanPham = (SanPham)dgvSanPham.SelectedRows[0].DataBoundItem;
+                txtMaSanPham.Text = selectedSanPham.MaSanPham;
+                txtTenSanPham.Text = selectedSanPham.TenSanPham;
+                txtDonGia.Text = selectedSanPham.DonGia.ToString();
+                txtSoLuongTon.Text = selectedSanPham.SoLuongTon.ToString();
+            }
+        }
+
+        private void ClearInputs()
         {
             txtMaSanPham.Clear();
             txtTenSanPham.Clear();
             txtDonGia.Clear();
             txtSoLuongTon.Clear();
-            txtMaSanPham.Focus();
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            HienThiSanPham();
-            LamMoiThongTin();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                dataGridView1.Rows[e.RowIndex].Selected = true;
-
-                var maSanPhamValue = dataGridView1.Rows[e.RowIndex].Cells["MaSanPham"].Value;
-
-                if (maSanPhamValue != null && !string.IsNullOrEmpty(maSanPhamValue.ToString()))
-                {
-                    string maSanPham = maSanPhamValue.ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Mã sản phẩm không hợp lệ.");
-                    return;
-                }
-
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
-                txtMaSanPham.Text = row.Cells["MaSanPham"].Value.ToString();
-                txtTenSanPham.Text = row.Cells["TenSanPham"].Value.ToString();
-                txtDonGia.Text = row.Cells["DonGia"].Value.ToString();
-                txtSoLuongTon.Text = row.Cells["SoLuongTon"].Value.ToString();
-            }
-
-        }
-
-        private void frmQuanLySanPham_Load(object sender, EventArgs e)
-        {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView1.DataSource = bindingSource;
-            HienThiSanPham();
         }
     }
 }

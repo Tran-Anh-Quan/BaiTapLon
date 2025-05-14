@@ -2,15 +2,8 @@
 {
     partial class frmDangNhap
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,123 +13,128 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDangNhap));
+            this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnThoat = new System.Windows.Forms.Button();
+            this.btnDangNhap = new System.Windows.Forms.Button();
+            this.lblMatKhau = new System.Windows.Forms.Label();
+            this.txtMatKhau = new System.Windows.Forms.TextBox();
             this.lblTenDangNhap = new System.Windows.Forms.Label();
-            this.lblPassWord = new System.Windows.Forms.Label();
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.chk = new System.Windows.Forms.CheckBox();
-            this.btnLogin = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.txtTenDangNhap = new System.Windows.Forms.TextBox();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.pnlMain.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlMain
+            // 
+            this.pnlMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMain.Controls.Add(this.btnThoat);
+            this.pnlMain.Controls.Add(this.btnDangNhap);
+            this.pnlMain.Controls.Add(this.lblMatKhau);
+            this.pnlMain.Controls.Add(this.txtMatKhau);
+            this.pnlMain.Controls.Add(this.lblTenDangNhap);
+            this.pnlMain.Controls.Add(this.txtTenDangNhap);
+            this.pnlMain.Controls.Add(this.lblTitle);
+            this.pnlMain.Location = new System.Drawing.Point(50, 24);
+            this.pnlMain.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(472, 271);
+            this.pnlMain.TabIndex = 0;
+            // 
+            // btnThoat
+            // 
+            this.btnThoat.Location = new System.Drawing.Point(231, 207);
+            this.btnThoat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnThoat.Name = "btnThoat";
+            this.btnThoat.Size = new System.Drawing.Size(80, 24);
+            this.btnThoat.TabIndex = 6;
+            this.btnThoat.Text = "Thoát";
+            this.btnThoat.UseVisualStyleBackColor = true;
+            this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
+            // 
+            // btnDangNhap
+            // 
+            this.btnDangNhap.Location = new System.Drawing.Point(100, 207);
+            this.btnDangNhap.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDangNhap.Name = "btnDangNhap";
+            this.btnDangNhap.Size = new System.Drawing.Size(100, 24);
+            this.btnDangNhap.TabIndex = 5;
+            this.btnDangNhap.Text = "Đăng Nhập";
+            this.btnDangNhap.UseVisualStyleBackColor = true;
+            this.btnDangNhap.Click += new System.EventHandler(this.btnDangNhap_Click);
+            // 
+            // lblMatKhau
+            // 
+            this.lblMatKhau.AutoSize = true;
+            this.lblMatKhau.Location = new System.Drawing.Point(53, 154);
+            this.lblMatKhau.Name = "lblMatKhau";
+            this.lblMatKhau.Size = new System.Drawing.Size(64, 16);
+            this.lblMatKhau.TabIndex = 4;
+            this.lblMatKhau.Text = "Mật khẩu:";
+            // 
+            // txtMatKhau
+            // 
+            this.txtMatKhau.Location = new System.Drawing.Point(131, 151);
+            this.txtMatKhau.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMatKhau.Name = "txtMatKhau";
+            this.txtMatKhau.PasswordChar = '*';
+            this.txtMatKhau.Size = new System.Drawing.Size(256, 22);
+            this.txtMatKhau.TabIndex = 3;
             // 
             // lblTenDangNhap
             // 
             this.lblTenDangNhap.AutoSize = true;
-            this.lblTenDangNhap.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTenDangNhap.Location = new System.Drawing.Point(54, 49);
+            this.lblTenDangNhap.Location = new System.Drawing.Point(24, 101);
             this.lblTenDangNhap.Name = "lblTenDangNhap";
-            this.lblTenDangNhap.Size = new System.Drawing.Size(138, 20);
-            this.lblTenDangNhap.TabIndex = 0;
+            this.lblTenDangNhap.Size = new System.Drawing.Size(101, 16);
+            this.lblTenDangNhap.TabIndex = 2;
             this.lblTenDangNhap.Text = "Tên đăng nhập:";
             // 
-            // lblPassWord
+            // txtTenDangNhap
             // 
-            this.lblPassWord.AutoSize = true;
-            this.lblPassWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPassWord.Location = new System.Drawing.Point(54, 95);
-            this.lblPassWord.Name = "lblPassWord";
-            this.lblPassWord.Size = new System.Drawing.Size(91, 20);
-            this.lblPassWord.TabIndex = 1;
-            this.lblPassWord.Text = "Mật khẩu:";
+            this.txtTenDangNhap.Location = new System.Drawing.Point(131, 98);
+            this.txtTenDangNhap.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtTenDangNhap.Name = "txtTenDangNhap";
+            this.txtTenDangNhap.Size = new System.Drawing.Size(256, 22);
+            this.txtTenDangNhap.TabIndex = 1;
             // 
-            // txtUsername
+            // lblTitle
             // 
-            this.txtUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsername.Location = new System.Drawing.Point(217, 42);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(219, 27);
-            this.txtUsername.TabIndex = 2;
-            // 
-            // txtPassword
-            // 
-            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPassword.Location = new System.Drawing.Point(217, 88);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(219, 27);
-            this.txtPassword.TabIndex = 3;
-            this.txtPassword.UseSystemPasswordChar = true;
-            // 
-            // chk
-            // 
-            this.chk.AutoSize = true;
-            this.chk.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk.Location = new System.Drawing.Point(220, 125);
-            this.chk.Name = "chk";
-            this.chk.Size = new System.Drawing.Size(171, 22);
-            this.chk.TabIndex = 4;
-            this.chk.Text = "Ghi nhớ đăng nhập";
-            this.chk.UseVisualStyleBackColor = true;
-            // 
-            // btnLogin
-            // 
-            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLogin.Location = new System.Drawing.Point(217, 157);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(101, 33);
-            this.btnLogin.TabIndex = 5;
-            this.btnLogin.Text = "Đăng nhập";
-            this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(334, 156);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(101, 33);
-            this.btnCancel.TabIndex = 6;
-            this.btnCancel.Text = "Thoát";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Location = new System.Drawing.Point(94, 20);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(261, 32);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "Đăng Nhập Hệ Thống";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmDangNhap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(495, 234);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnLogin);
-            this.Controls.Add(this.chk);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.txtUsername);
-            this.Controls.Add(this.lblPassWord);
-            this.Controls.Add(this.lblTenDangNhap);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ClientSize = new System.Drawing.Size(610, 330);
+            this.Controls.Add(this.pnlMain);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
             this.Name = "frmDangNhap";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Đăng nhập tài khoản";
+            this.Text = "Đăng Nhập";
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
-        #endregion
-
+        private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.TextBox txtTenDangNhap;
         private System.Windows.Forms.Label lblTenDangNhap;
-        private System.Windows.Forms.Label lblPassWord;
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.CheckBox chk;
-        private System.Windows.Forms.Button btnLogin;
-        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.TextBox txtMatKhau;
+        private System.Windows.Forms.Label lblMatKhau;
+        private System.Windows.Forms.Button btnDangNhap;
+        private System.Windows.Forms.Button btnThoat;
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,76 +15,94 @@ namespace BaiTapLon.ViewModels
     {
         public BindingList<TaiKhoan> List = new BindingList<TaiKhoan>();
         private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        // Hàm mã hóa mật khẩu bằng SHA256 để bảo mật
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
         public bool DangNhapTaiKhoan(string tenDangNhap, string matKhau)
         {
+            if (string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
+            {
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không được để trống.");
+                return false;
+            }
+
+            string hashedPassword = HashPassword(matKhau); // Mã hóa mật khẩu
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = @user AND MatKhau = @pass";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                try
                 {
-                    cmd.Parameters.Add("@user", SqlDbType.NVarChar).Value = tenDangNhap.Trim();
-                    cmd.Parameters.Add("@pass", SqlDbType.NVarChar).Value = matKhau.Trim();
+                    string query = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = @user AND MatKhau = @pass";
 
-                    conn.Open();
-                    int count = (int)cmd.ExecuteScalar();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("@user", SqlDbType.NVarChar).Value = tenDangNhap.Trim();
+                        cmd.Parameters.Add("@pass", SqlDbType.NVarChar).Value = hashedPassword;
 
-                    return count > 0;
+                        conn.Open();
+                        int count = (int)cmd.ExecuteScalar();
+
+                        return count > 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi đăng nhập: " + ex.Message);
+                    return false;
                 }
             }
         }
+
         public TaiKhoan LayTaiKhoanTheoMaNhanVien(string maNhanVien)
         {
             TaiKhoan tk = null;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string sql = "SELECT * FROM TaiKhoan WHERE MaNhanVien = @MaNhanVien";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                try
                 {
-                    if (reader.Read())
+                    conn.Open();
+                    string sql = "SELECT * FROM TaiKhoan WHERE MaNhanVien = @MaNhanVien";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        tk = new TaiKhoan
+                        if (reader.Read())
                         {
-                            TenDangNhap = reader["TenDangNhap"].ToString(),
-                            MatKhau = reader["MatKhau"].ToString(),
-                            MaNhanVien = reader["MaNhanVien"].ToString()
-                        };
+                            tk = new TaiKhoan
+                            {
+                                TenDangNhap = reader["TenDangNhap"].ToString(),
+                                MatKhau = reader["MatKhau"].ToString(),
+                                MaNhanVien = reader["MaNhanVien"].ToString()
+                            };
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi lấy tài khoản: " + ex.Message);
                 }
             }
             return tk;
-        }
-        public BindingList<TaiKhoan> LayTatCaTaiKhoan()
-        {
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string sql = "SELECT * FROM TaiKhoan";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    List.Add(new TaiKhoan
-                    {
-                        TenDangNhap = reader["TenDangNhap"].ToString(),
-                        MatKhau = reader["MatKhau"].ToString(),
-                        MaNhanVien = reader["MaNhanVien"].ToString()
-                    });
-                }
-            }
-
-            return List;
         }
         public void SuaTaiKhoan(string maNhanVien, string tenDangNhap, string matKhau)
         {
@@ -151,18 +170,34 @@ namespace BaiTapLon.ViewModels
 
         public bool ThemTaiKhoan(TaiKhoan tk)
         {
+            if (tk == null || string.IsNullOrWhiteSpace(tk.TenDangNhap) || string.IsNullOrWhiteSpace(tk.MatKhau))
+            {
+                MessageBox.Show("Thông tin tài khoản không hợp lệ.");
+                return false;
+            }
+
+            tk.MatKhau = HashPassword(tk.MatKhau); // Mã hóa mật khẩu trước khi lưu
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNhanVien)
-                       VALUES (@TenDangNhap, @MatKhau, @MaNhanVien)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@TenDangNhap", tk.TenDangNhap);
-                cmd.Parameters.AddWithValue("@MatKhau", tk.MatKhau);
-                cmd.Parameters.AddWithValue("@MaNhanVien", tk.MaNhanVien);
+                try
+                {
+                    string sql = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNhanVien)
+                                   VALUES (@TenDangNhap, @MatKhau, @MaNhanVien)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@TenDangNhap", tk.TenDangNhap);
+                    cmd.Parameters.AddWithValue("@MatKhau", tk.MatKhau);
+                    cmd.Parameters.AddWithValue("@MaNhanVien", tk.MaNhanVien);
 
-                conn.Open();
-                int rows = cmd.ExecuteNonQuery();
-                return rows > 0;
+                    conn.Open();
+                    int rows = cmd.ExecuteNonQuery();
+                    return rows > 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi thêm tài khoản: " + ex.Message);
+                    return false;
+                }
             }
         }
 

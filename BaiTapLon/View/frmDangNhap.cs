@@ -1,43 +1,38 @@
 ﻿using BaiTapLon.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
     public partial class frmDangNhap : Form
     {
+        private readonly TaiKhoanVM viewModel;
+
         public frmDangNhap()
         {
             InitializeComponent();
+            viewModel = new TaiKhoanVM();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnDangNhap_Click(object sender, EventArgs e)
         {
-            string tenDangNhap = txtUsername.Text;
-            string matKhau = txtPassword.Text;
-            TaiKhoanVM TKVM = new TaiKhoanVM();
-            bool success = TKVM.DangNhapTaiKhoan(tenDangNhap, matKhau);
-            if (success)
+            string tenDangNhap = txtTenDangNhap.Text.Trim();
+            string matKhau = txtMatKhau.Text.Trim();
+
+            if (viewModel.DangNhapTaiKhoan(tenDangNhap, matKhau))
             {
-                MessageBox.Show("Đăng nhập thành công!");
-                frmMain mainForm = new frmMain();
-                mainForm.Show();
+                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                frmQuanLyTaiKhoan frm = new frmQuanLyTaiKhoan();
+                frm.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!");
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnThoat_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }

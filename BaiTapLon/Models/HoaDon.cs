@@ -19,6 +19,7 @@ namespace BaiTapLon.Models
         public decimal TongTien { get; set; }
         public decimal VAT { get; set; }
         public decimal ThanhToan { get; set; }
+       
     }
 
 

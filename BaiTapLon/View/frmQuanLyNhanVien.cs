@@ -38,6 +38,11 @@ namespace BaiTapLon.View
             cboGioiTinh.Items.Add("Nam");
             cboGioiTinh.Items.Add("Nữ");
             cboGioiTinh.SelectedIndex = 0;
+
+            cboChucVu.Items.Add("Quản lý");
+            cboChucVu.Items.Add("Nhân viên bán hàng");
+            cboChucVu.Items.Add("Kế toán");
+            cboChucVu.SelectedIndex = 0;
         }
 
         private void LoadNhanVienData()
@@ -63,7 +68,7 @@ namespace BaiTapLon.View
             string maNhanVien = txtMaNhanVien.Text.Trim();
             string tenNhanVien = txtTenNhanVien.Text.Trim();
             string soDienThoai = txtSoDienThoai.Text.Trim();
-            string chucVu = txtChucVu.Text.Trim();
+            string chucVu = cboChucVu.SelectedItem.ToString();
             DateTime ngayVaoLam = dtpNgayVaoLam.Value;
             decimal luong = decimal.Parse(txtLuong.Text);
             string gioiTinh = cboGioiTinh.SelectedItem.ToString();
@@ -88,30 +93,22 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnTim_Click(object sender, EventArgs e)
+        private void btnTim_Click(object peacocksender, EventArgs e)
         {
             string keyword = txtMaNhanVien.Text.Trim();
-            if (string.IsNullOrEmpty(keyword))
-            {
-                MessageBox.Show("Vui lòng nhập mã nhân viên hoặc tên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             var result = viewModel.TimKiemNhanVien(keyword);
-            if (result.Count > 0)
-            {
-                dgvNhanVien.DataSource = result;
-            }
-            else
-            {
-                dgvNhanVien.DataSource = viewModel.NhanVienList;
-            }
+            dgvNhanVien.DataSource = null;
+            dgvNhanVien.DataSource = result;
+            dgvNhanVien.Refresh();
         }
 
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearInputs();
-            LoadNhanVienData();
+            viewModel.LayTatCaNhanVien();
+            dgvNhanVien.DataSource = null;
+            dgvNhanVien.DataSource = viewModel.NhanVienList;
+            dgvNhanVien.Refresh();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -128,7 +125,7 @@ namespace BaiTapLon.View
                 txtTenNhanVien.Text = selectedNhanVien.TenNhanVien;
                 txtSoDienThoai.Text = selectedNhanVien.SoDienThoai;
                 cboGioiTinh.SelectedItem = selectedNhanVien.GioiTinh;
-                txtChucVu.Text = selectedNhanVien.ChucVu;
+                cboChucVu.SelectedItem = selectedNhanVien.ChucVu;
                 dtpNgayVaoLam.Value = selectedNhanVien.NgayVaoLam;
                 txtLuong.Text = selectedNhanVien.Luong.ToString("N0");
             }
@@ -139,7 +136,7 @@ namespace BaiTapLon.View
             if (string.IsNullOrWhiteSpace(txtMaNhanVien.Text) ||
                 string.IsNullOrWhiteSpace(txtTenNhanVien.Text) ||
                 string.IsNullOrWhiteSpace(txtSoDienThoai.Text) ||
-                string.IsNullOrWhiteSpace(txtChucVu.Text) ||
+                cboChucVu.SelectedItem == null ||
                 string.IsNullOrWhiteSpace(txtLuong.Text))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin nhân viên.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -163,7 +160,7 @@ namespace BaiTapLon.View
                 TenNhanVien = txtTenNhanVien.Text.Trim(),
                 SoDienThoai = txtSoDienThoai.Text.Trim(),
                 GioiTinh = cboGioiTinh.SelectedItem.ToString(),
-                ChucVu = txtChucVu.Text.Trim(),
+                ChucVu = cboChucVu.SelectedItem.ToString(),
                 NgayVaoLam = dtpNgayVaoLam.Value,
                 Luong = decimal.Parse(txtLuong.Text)
             };
@@ -175,7 +172,7 @@ namespace BaiTapLon.View
             txtTenNhanVien.Clear();
             txtSoDienThoai.Clear();
             cboGioiTinh.SelectedIndex = 0;
-            txtChucVu.Clear();
+            cboChucVu.SelectedIndex = 0;
             dtpNgayVaoLam.Value = DateTime.Now;
             txtLuong.Clear();
         }

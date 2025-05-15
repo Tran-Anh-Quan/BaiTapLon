@@ -202,13 +202,23 @@ namespace BaiTapLon.ViewModels
         // Tìm kiếm sản phẩm
         public BindingList<SanPham> TimKiemSanPham(string keyword)
         {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                LayTatCaSanPham(); // Tải lại danh sách từ database nếu từ khóa rỗng
+                if (SanphamList.Count == 0)
+                {
+                    MessageBox.Show("Danh sách sản phẩm trống. Vui lòng thêm sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return SanphamList;
+            }
+
             var result = new BindingList<SanPham>(SanphamList.Where(sp =>
                 sp.MaSanPham.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
                 sp.TenSanPham.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToList());
 
             if (result.Count == 0)
             {
-                MessageBox.Show("Không tìm thấy sản phẩm nào.");
+                MessageBox.Show("Không tìm thấy sản phẩm nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return result;
 

@@ -1,20 +1,16 @@
 ﻿using BaiTapLon.Models;
+using BaiTapLon.View;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 namespace BaiTapLon.ViewModels
 {
     public class TaiKhoanVM : INotifyPropertyChanged
     {
         public BindingList<TaiKhoan> List = new BindingList<TaiKhoan>();
-        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -23,184 +19,282 @@ namespace BaiTapLon.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        // Hàm mã hóa mật khẩu bằng SHA256 để bảo mật
-        private string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-        public bool DangNhapTaiKhoan(string tenDangNhap, string matKhau)
+        public bool DangNhapTaiKhoan(string tenDangNhap, string matKhau, Form loginForm)
         {
             if (string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
             {
-                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không được để trống.");
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không được để trống.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            string hashedPassword = HashPassword(matKhau); // Mã hóa mật khẩu
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
-                    string query = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = @user AND MatKhau = @pass";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    conn.Open();
+                    string query = "SELECT MatKhau FROM TaiKhoan WHERE TenDangNhap = @user";
+                    using (var cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.Add("@user", SqlDbType.NVarChar).Value = tenDangNhap.Trim();
-                        cmd.Parameters.Add("@pass", SqlDbType.NVarChar).Value = hashedPassword;
+                        cmd.Parameters.AddWithValue("@user", tenDangNhap.Trim());
+                        object result = cmd.ExecuteScalar();
 
-                        conn.Open();
-                        int count = (int)cmd.ExecuteScalar();
-
-                        return count > 0;
+                        if (result != null && result.ToString() == matKhau)
+                        {
+                            loginForm.Hide();
+                            var mainForm = new frmQuanLyTaiKhoan();
+                            mainForm.ShowDialog();
+                            loginForm.Close();
+                            return true;
+                        }
+                        else if (result == null)
+                        {
+                            MessageBox.Show("Tên đăng nhập không tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Mật khẩu không đúng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
                     }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi đăng nhập: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi đăng nhập: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
         }
 
-        public TaiKhoan LayTaiKhoanTheoMaNhanVien(string maNhanVien)
+        public void LoadTaiKhoanData()
         {
-            TaiKhoan tk = null;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            List.Clear();
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM TaiKhoan WHERE MaNhanVien = @MaNhanVien";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    string sql = "SELECT * FROM TaiKhoan";
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        if (reader.Read())
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            tk = new TaiKhoan
+                            while (reader.Read())
                             {
-                                TenDangNhap = reader["TenDangNhap"].ToString(),
-                                MatKhau = reader["MatKhau"].ToString(),
-                                MaNhanVien = reader["MaNhanVien"].ToString()
-                            };
+                                List.Add(new TaiKhoan
+                                {
+                                    MaNhanVien = reader["MaNhanVien"].ToString(),
+                                    TenDangNhap = reader["TenDangNhap"].ToString(),
+                                    MatKhau = reader["MatKhau"].ToString()
+                                });
+                            }
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (SqlException ex)
                 {
-                    MessageBox.Show("Lỗi khi lấy tài khoản: " + ex.Message);
-                }
-            }
-            return tk;
-        }
-        public void SuaTaiKhoan(string maNhanVien, string tenDangNhap, string matKhau)
-        {
-            if (string.IsNullOrWhiteSpace(maNhanVien))
-            {
-                MessageBox.Show("Vui lòng nhập mã nhân viên để sửa tài khoản.");
-                return;
-            }
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string sql = @"UPDATE TaiKhoan SET TenDangNhap = @TenDangNhap, MatKhau = @MatKhau 
-                           WHERE MaNhanVien = @MaNhanVien";
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
-                    cmd.Parameters.AddWithValue("@TenDangNhap", tenDangNhap);
-                    cmd.Parameters.AddWithValue("@MatKhau", matKhau);
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        MessageBox.Show("Sửa tài khoản thành công.");
-                    else
-                        MessageBox.Show("Không tìm thấy tài khoản để sửa.");
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi sửa tài khoản: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi tải danh sách tài khoản: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        public void XoaTaiKhoan(string maNhanVien)
+        public BindingList<TaiKhoan> TimKiemTaiKhoan(string tenDangNhap)
         {
-            if (string.IsNullOrEmpty(maNhanVien))
+            var result = new BindingList<TaiKhoan>();
+
+            if (string.IsNullOrWhiteSpace(tenDangNhap))
             {
-                MessageBox.Show("Vui lòng nhập mã nhân viên để xóa tài khoản.");
-                return;
+                LoadTaiKhoanData();
+                return List;
             }
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string sql = "DELETE FROM TaiKhoan WHERE MaNhanVien = @MaNhanVien";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
+                    string sql = "SELECT * FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@TenDangNhap", tenDangNhap.Trim());
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                result.Add(new TaiKhoan
+                                {
+                                    MaNhanVien = reader["MaNhanVien"].ToString(),
+                                    TenDangNhap = reader["TenDangNhap"].ToString(),
+                                    MatKhau = reader["MatKhau"].ToString()
+                                });
+                            }
+                        }
+                    }
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        MessageBox.Show("Xóa tài khoản thành công.");
-                    else
-                        MessageBox.Show("Không tìm thấy tài khoản để xóa.");
+                    if (result.Count == 0)
+                    {
+                        MessageBox.Show("Không tìm thấy tài khoản với tên đăng nhập này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTaiKhoanData();
+                        return List;
+                    }
+                    return result;
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return List;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi xóa tài khoản: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi tìm kiếm tài khoản: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return List;
+                }
+            }
+        }
+
+        public void SuaTaiKhoan(string tenDangNhap, string matKhau, string maNhanVien)
+        {
+            if (string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau) || string.IsNullOrWhiteSpace(maNhanVien))
+            {
+                MessageBox.Show("Thông tin không được để trống.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = "UPDATE TaiKhoan SET MatKhau = @MatKhau, MaNhanVien = @MaNhanVien WHERE TenDangNhap = @TenDangNhap";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@TenDangNhap", tenDangNhap);
+                        cmd.Parameters.AddWithValue("@MatKhau", matKhau);
+                        cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Sửa tài khoản thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy tài khoản để sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi sửa tài khoản: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        public void XoaTaiKhoan(string tenDangNhap)
+        {
+            if (string.IsNullOrWhiteSpace(tenDangNhap))
+            {
+                MessageBox.Show("Tên đăng nhập không được để trống.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = "DELETE FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@TenDangNhap", tenDangNhap);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Xóa tài khoản thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy tài khoản để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xóa tài khoản: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         public bool ThemTaiKhoan(TaiKhoan tk)
         {
-            if (tk == null || string.IsNullOrWhiteSpace(tk.TenDangNhap) || string.IsNullOrWhiteSpace(tk.MatKhau))
+            if (tk == null || string.IsNullOrWhiteSpace(tk.TenDangNhap) || string.IsNullOrWhiteSpace(tk.MatKhau) || string.IsNullOrWhiteSpace(tk.MaNhanVien))
             {
-                MessageBox.Show("Thông tin tài khoản không hợp lệ.");
+                MessageBox.Show("Thông tin tài khoản không được để trống.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            tk.MatKhau = HashPassword(tk.MatKhau); // Mã hóa mật khẩu trước khi lưu
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
-                    string sql = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNhanVien)
-                                   VALUES (@TenDangNhap, @MatKhau, @MaNhanVien)";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@TenDangNhap", tk.TenDangNhap);
-                    cmd.Parameters.AddWithValue("@MatKhau", tk.MatKhau);
-                    cmd.Parameters.AddWithValue("@MaNhanVien", tk.MaNhanVien);
-
                     conn.Open();
-                    int rows = cmd.ExecuteNonQuery();
-                    return rows > 0;
+
+                    // Check if MaNhanVien exists in NhanVien table
+                    string checkSql = "SELECT COUNT(*) FROM NhanVien WHERE MaNhanVien = @MaNhanVien";
+                    using (var checkCmd = new SqlCommand(checkSql, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@MaNhanVien", tk.MaNhanVien);
+                        int count = (int)checkCmd.ExecuteScalar();
+                        if (count == 0)
+                        {
+                            MessageBox.Show($"Mã nhân viên {tk.MaNhanVien} không tồn tại trong bảng NhanVien.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
+                    }
+
+                    // Proceed with the insert if MaNhanVien exists
+                    string sql = "INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNhanVien) VALUES (@TenDangNhap, @MatKhau, @MaNhanVien)";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@TenDangNhap", tk.TenDangNhap);
+                        cmd.Parameters.AddWithValue("@MatKhau", tk.MatKhau);
+                        cmd.Parameters.AddWithValue("@MaNhanVien", tk.MaNhanVien);
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            MessageBox.Show("Thêm tài khoản thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi thêm tài khoản: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi thêm tài khoản: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
         }
-
-
     }
 }

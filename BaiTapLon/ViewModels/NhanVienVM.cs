@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
     public class NhanVienVM : INotifyPropertyChanged
     {
         public BindingList<NhanVien> NhanVienList { get; private set; } = new BindingList<NhanVien>();
-        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -216,15 +216,22 @@ namespace BaiTapLon.ViewModels
         }
 
         // Tìm kiếm nhân viên theo tên hoặc mã
+
         public BindingList<NhanVien> TimKiemNhanVien(string keyword)
         {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                LayTatCaNhanVien(); // Tải lại danh sách từ database nếu từ khóa rỗng
+                return NhanVienList;
+            }
+
             var result = new BindingList<NhanVien>(NhanVienList.Where(nv =>
                 nv.MaNhanVien.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
                 nv.TenNhanVien.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToList());
 
             if (result.Count == 0)
             {
-                MessageBox.Show("Không tìm thấy nhân viên nào.");
+                MessageBox.Show("Không tìm thấy nhân viên nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return result;
         }

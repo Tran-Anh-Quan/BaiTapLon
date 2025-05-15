@@ -39,7 +39,7 @@ namespace BaiTapLon.View
 
         private void mnuHoaDon_Click(object sender, EventArgs e)
         {
-            OpenForm(new frmQuanLyHoaDon());
+            OpenForm(new frmHoaDon());
         }
 
         private void mnuTaiKhoan_Click(object sender, EventArgs e)

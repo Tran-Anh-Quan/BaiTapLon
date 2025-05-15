@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
     public class KhachHangVM : INotifyPropertyChanged
     {
         public BindingList<KhachHang> KhachHangList { get; private set; } = new BindingList<KhachHang>();
-        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -208,13 +208,19 @@ namespace BaiTapLon.ViewModels
         // Tìm kiếm khách hàng theo tên hoặc mã
         public BindingList<KhachHang> TimKiemKhachHang(string keyword)
         {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                LayTatCaKhachHang(); // Tải lại danh sách từ database nếu từ khóa rỗng
+                return KhachHangList;
+            }
+
             var result = new BindingList<KhachHang>(KhachHangList.Where(kh =>
                 kh.MaKhachHang.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                kh.TenKhachHang.IndexOf(keyword, StringComparison.OrdinalIgnoreCase)>= 0) .ToList());
+                kh.TenKhachHang.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToList());
 
             if (result.Count == 0)
             {
-                MessageBox.Show("Không tìm thấy khách hàng nào.");
+                MessageBox.Show("Không tìm thấy khách hàng nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return result;
         }

@@ -14,7 +14,7 @@ namespace BaiTapLon.View
             InitializeComponent();
             viewModel = new TaiKhoanVM();
             SetupDataGridView();
-            LoadTaiKhoanData();
+            viewModel.LoadTaiKhoanData(); // Tải danh sách tài khoản khi mở form
         }
 
         private void SetupDataGridView()
@@ -22,49 +22,10 @@ namespace BaiTapLon.View
             dgvTaiKhoan.AutoGenerateColumns = false;
             dgvTaiKhoan.DataSource = viewModel.List;
             dgvTaiKhoan.Columns.Clear();
-            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "MaNhanVien",
-                HeaderText = "Mã Nhân Viên"
-            });
-            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "TenDangNhap",
-                HeaderText = "Tên Đăng Nhập"
-            });
+            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaNhanVien", HeaderText = "Mã Nhân Viên" });
+            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenDangNhap", HeaderText = "Tên Đăng Nhập" });
+            dgvTaiKhoan.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MatKhau", HeaderText = "Mật Khẩu" });
             dgvTaiKhoan.SelectionChanged += DgvTaiKhoan_SelectionChanged;
-        }
-
-        private void LoadTaiKhoanData()
-        {
-            viewModel.List.Clear();
-            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(@"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True"))
-            {
-                try
-                {
-                    conn.Open();
-                    string sql = "SELECT * FROM TaiKhoan";
-                    using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sql, conn))
-                    {
-                        using (System.Data.SqlClient.SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                viewModel.List.Add(new TaiKhoan
-                                {
-                                    MaNhanVien = reader["MaNhanVien"].ToString(),
-                                    TenDangNhap = reader["TenDangNhap"].ToString(),
-                                    MatKhau = reader["MatKhau"].ToString()
-                                });
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi khi tải danh sách tài khoản: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -73,24 +34,18 @@ namespace BaiTapLon.View
             string tenDangNhap = txtTenDangNhap.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(maNhanVien) || string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
+            if (string.IsNullOrEmpty(maNhanVien) || string.IsNullOrEmpty(tenDangNhap) || string.IsNullOrEmpty(matKhau))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin tài khoản.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            TaiKhoan tk = new TaiKhoan
+            var taiKhoan = new TaiKhoan { MaNhanVien = maNhanVien, TenDangNhap = tenDangNhap, MatKhau = matKhau };
+            if (viewModel.ThemTaiKhoan(taiKhoan))
             {
-                MaNhanVien = maNhanVien,
-                TenDangNhap = tenDangNhap,
-                MatKhau = matKhau
-            };
-
-            if (viewModel.ThemTaiKhoan(tk))
-            {
-                MessageBox.Show("Thêm tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadTaiKhoanData();
+                viewModel.LoadTaiKhoanData(); // Tải lại danh sách sau khi thêm
                 ClearInputs();
+                MessageBox.Show("Thêm tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -100,14 +55,14 @@ namespace BaiTapLon.View
             string tenDangNhap = txtTenDangNhap.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(maNhanVien) || string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau))
+            if (string.IsNullOrEmpty(maNhanVien) || string.IsNullOrEmpty(tenDangNhap) || string.IsNullOrEmpty(matKhau))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin tài khoản.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             viewModel.SuaTaiKhoan(maNhanVien, tenDangNhap, matKhau);
-            LoadTaiKhoanData();
+            viewModel.LoadTaiKhoanData(); // Tải lại danh sách sau khi sửa
             ClearInputs();
         }
 
@@ -115,16 +70,16 @@ namespace BaiTapLon.View
         {
             string maNhanVien = txtMaNhanVien.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(maNhanVien))
+            if (string.IsNullOrEmpty(maNhanVien))
             {
-                MessageBox.Show("Vui lòng nhập mã nhân viên để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập mã nhân viên.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (MessageBox.Show("Bạn có chắc muốn xóa tài khoản này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 viewModel.XoaTaiKhoan(maNhanVien);
-                LoadTaiKhoanData();
+                viewModel.LoadTaiKhoanData(); // Tải lại danh sách sau khi xóa
                 ClearInputs();
             }
         }
@@ -132,22 +87,17 @@ namespace BaiTapLon.View
         private void btnTim_Click(object sender, EventArgs e)
         {
             string maNhanVien = txtMaNhanVien.Text.Trim();
+            viewModel.List.Clear(); // Xóa danh sách hiện tại trong DataGridView
+            viewModel.List = viewModel.TimKiemTaiKhoan(maNhanVien); // Cập nhật danh sách với kết quả tìm kiếm
+            dgvTaiKhoan.DataSource = viewModel.List; // Gán lại nguồn dữ liệu cho DataGridView
 
-            if (string.IsNullOrWhiteSpace(maNhanVien))
+            if (viewModel.List.Count > 0)
             {
-                MessageBox.Show("Vui lòng nhập mã nhân viên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            TaiKhoan tk = viewModel.LayTaiKhoanTheoMaNhanVien(maNhanVien);
-            if (tk != null)
-            {
-                txtTenDangNhap.Text = tk.TenDangNhap;
-                txtMatKhau.Text = tk.MatKhau; // Note: Password is hashed, consider showing a placeholder or handling differently
+                txtTenDangNhap.Text = viewModel.List[0].TenDangNhap;
+                txtMatKhau.Text = viewModel.List[0].MatKhau;
             }
             else
             {
-                MessageBox.Show("Không tìm thấy tài khoản với mã nhân viên này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearInputs();
             }
         }
@@ -155,18 +105,18 @@ namespace BaiTapLon.View
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();
-            frmDangNhap frm = new frmDangNhap();
-            frm.Show();
+            var frmDangNhap = new frmDangNhap();
+            frmDangNhap.Show();
         }
 
         private void DgvTaiKhoan_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvTaiKhoan.SelectedRows.Count > 0)
             {
-                TaiKhoan selectedTaiKhoan = (TaiKhoan)dgvTaiKhoan.SelectedRows[0].DataBoundItem;
+                var selectedTaiKhoan = (TaiKhoan)dgvTaiKhoan.SelectedRows[0].DataBoundItem;
                 txtMaNhanVien.Text = selectedTaiKhoan.MaNhanVien;
                 txtTenDangNhap.Text = selectedTaiKhoan.TenDangNhap;
-                txtMatKhau.Text = selectedTaiKhoan.MatKhau; // Note: Password is hashed
+                txtMatKhau.Text = selectedTaiKhoan.MatKhau;
             }
         }
 

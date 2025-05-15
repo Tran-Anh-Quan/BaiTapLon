@@ -14,7 +14,7 @@ namespace BaiTapLon.ViewModels
     public class TaiKhoanVM : INotifyPropertyChanged
     {
         public BindingList<TaiKhoan> List = new BindingList<TaiKhoan>();
-        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=LAPTOP-I4S7V50U\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True;TrustServerCertificate=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

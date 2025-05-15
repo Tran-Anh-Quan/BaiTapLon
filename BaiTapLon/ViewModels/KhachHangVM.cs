@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
     public class KhachHangVM : INotifyPropertyChanged
     {
         public BindingList<KhachHang> KhachHangList { get; private set; } = new BindingList<KhachHang>();
-        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=LAPTOP-I4S7V50U\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True;TrustServerCertificate=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

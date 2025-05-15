@@ -60,6 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChiTietHoaDon.cs" />
     <Compile Include="Models\HoaDon.cs" />
     <Compile Include="Models\KhachHang.cs" />
     <Compile Include="Models\NhanVien.cs" />

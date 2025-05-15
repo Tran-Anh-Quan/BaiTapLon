@@ -1,6 +1,7 @@
 ﻿using BaiTapLon.Models;
 using BaiTapLon.ViewModels;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BaiTapLon.View
@@ -8,11 +9,15 @@ namespace BaiTapLon.View
     public partial class frmHoaDon : Form
     {
         private readonly HoaDonVM viewModel;
+        private readonly ChiTietHoaDonVM viewModelCT;
+        private readonly HoaDonChiTietVM viewModelHDCT;
 
         public frmHoaDon()
         {
             InitializeComponent();
+            viewModelCT = new ChiTietHoaDonVM();
             viewModel = new HoaDonVM();
+            viewModelHDCT = new HoaDonChiTietVM();
             SetupDataGridView();
             LoadHoaDonData();
             SetupEventHandlers();
@@ -21,23 +26,26 @@ namespace BaiTapLon.View
         private void SetupDataGridView()
         {
             dgvHoaDon.AutoGenerateColumns = false;
-            dgvHoaDon.DataSource = viewModel.HoaDonList;
-            dgvHoaDon.Columns.Clear();
+            dgvHoaDon.DataSource = viewModelHDCT.LayTatCaHoaDonGopChiTiet();
+
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaHoaDon", HeaderText = "Mã Hóa Đơn" });
-            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaKhachHang", HeaderText = "Mã Khách Hàng" });
-            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaSanPham", HeaderText = "Mã Sản Phẩm" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaKhachHang", HeaderText = "Mã KH" });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NgayLap", HeaderText = "Ngày Lập", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } });
+            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaSanPham", HeaderText = "Mã SP" });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoLuong", HeaderText = "Số Lượng" });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DonGia", HeaderText = "Đơn Giá", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiamGia", HeaderText = "Giảm Giá (%)" });
-            dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NgayLap", HeaderText = "Ngày Lập", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TongTien", HeaderText = "Tổng Tiền", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "VAT", HeaderText = "VAT", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
             dgvHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ThanhToan", HeaderText = "Thanh Toán", DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" } });
         }
+        
 
         private void LoadHoaDonData()
         {
             viewModel.LayTatCaHoaDon();
+            viewModelCT.LayTatCaHoaDonCT();
+
         }
 
         private void SetupEventHandlers()
@@ -76,18 +84,38 @@ namespace BaiTapLon.View
         {
             if (!ValidateInputs()) return;
 
-            HoaDon hoaDon = CreateHoaDonFromInputs();
-            if (viewModel.ThemHoaDon(hoaDon))
+            string maHoaDon = txtMaHoaDon.Text.Trim();
+
+            // Kiểm tra xem mã hóa đơn đã tồn tại trong danh sách ViewModel
+            var hoaDonDaCo = viewModel.HoaDonList.FirstOrDefault(h => h.MaHoaDon == maHoaDon);
+
+            // Nếu hóa đơn chưa tồn tại, tạo mới và thêm vào DB
+            if (hoaDonDaCo == null)
             {
+                HoaDon hoaDon = CreateHoaDonFromInputs();
+                if (!viewModel.ThemHoaDon(hoaDon))
+                {
+                    return; // Nếu thêm hóa đơn thất bại thì dừng lại
+                }
+            }
+
+            // Tạo và thêm chi tiết hóa đơn vào DB
+            ChiTietHoaDon chiTiet = CreateChiTietHoaDonFromInputs();
+            if (viewModel.ThemHoaDonCT(chiTiet))
+            {
+                MessageBox.Show("Đã thêm sản phẩm vào hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearInputs();
             }
         }
+
 
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (!ValidateInputs()) return;
 
             HoaDon hoaDon = CreateHoaDonFromInputs();
+            ChiTietHoaDon chiTietHoaDon = CreateChiTietHoaDonFromInputs();
+            viewModel.SuaHoaDonCT(chiTietHoaDon);
             viewModel.SuaHoaDon(hoaDon);
             ClearInputs();
         }
@@ -120,33 +148,41 @@ namespace BaiTapLon.View
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearInputs();
-            viewModel.LayTatCaHoaDon(); // Tải lại danh sách từ database
+            viewModelHDCT.LayTatCaHoaDonGopChiTiet(); // Tải lại danh sách từ database
             dgvHoaDon.DataSource = null; // Xóa DataSource cũ
-            dgvHoaDon.DataSource = viewModel.HoaDonList; // Cập nhật DataGridView
+            dgvHoaDon.DataSource = viewModelHDCT.LayTatCaHoaDonGopChiTiet(); // Cập nhật DataGridView
             dgvHoaDon.Refresh(); // Làm mới giao diện
         }
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            this.Close();
+            frmChiTietHoaDon frm = new frmChiTietHoaDon();
+            frm.MdiParent = this.MdiParent; 
+            frm.Show();
         }
 
         private void DgvHoaDon_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvHoaDon.SelectedRows.Count > 0)
             {
-                HoaDon selectedHoaDon = (HoaDon)dgvHoaDon.SelectedRows[0].DataBoundItem;
-                txtMaHoaDon.Text = selectedHoaDon.MaHoaDon;
-                txtMaKhachHang.Text = selectedHoaDon.MaKhachHang;
-                txtMaSanPham.Text = selectedHoaDon.MaSanPham;
-                txtSoLuong.Text = selectedHoaDon.SoLuong.ToString();
-                txtDonGia.Text = selectedHoaDon.DonGia.ToString();
-                txtGiamGia.Text = selectedHoaDon.GiamGia.ToString();
-                dtpNgayLap.Value = selectedHoaDon.NgayLap;
-                txtTongTien.Text = selectedHoaDon.TongTien.ToString("N2");
-                txtVAT.Text = selectedHoaDon.VAT.ToString("N2");
-                txtThanhToan.Text = selectedHoaDon.ThanhToan.ToString("N2");
+                var selectedItem = dgvHoaDon.SelectedRows[0].DataBoundItem as HoaDonChiTietDTO;
+
+                if (selectedItem != null)
+                {
+                    txtMaHoaDon.Text = selectedItem.MaHoaDon;
+                    txtMaKhachHang.Text = selectedItem.MaKhachHang;
+                    txtMaSanPham.Text = selectedItem.MaSanPham;
+                    txtSoLuong.Text = selectedItem.SoLuong.ToString();
+                    txtDonGia.Text = selectedItem.DonGia.ToString("N2");
+                    txtGiamGia.Text = selectedItem.GiamGia.ToString();
+                    dtpNgayLap.Value = selectedItem.NgayLap;
+                    txtTongTien.Text = selectedItem.TongTien.ToString("N2");
+                    txtVAT.Text = selectedItem.VAT.ToString("N2");
+                    txtThanhToan.Text = selectedItem.ThanhToan.ToString("N2");
+                }
             }
         }
+
+
 
         private bool ValidateInputs()
         {
@@ -168,14 +204,21 @@ namespace BaiTapLon.View
             {
                 MaHoaDon = txtMaHoaDon.Text.Trim(),
                 MaKhachHang = txtMaKhachHang.Text.Trim(),
-                MaSanPham = txtMaSanPham.Text.Trim(),
-                SoLuong = int.Parse(txtSoLuong.Text),
-                DonGia = decimal.Parse(txtDonGia.Text),
-                GiamGia = string.IsNullOrEmpty(txtGiamGia.Text) ? 0 : int.Parse(txtGiamGia.Text),
                 NgayLap = dtpNgayLap.Value,
                 TongTien = decimal.Parse(txtTongTien.Text),
                 VAT = decimal.Parse(txtVAT.Text),
                 ThanhToan = decimal.Parse(txtThanhToan.Text)
+            };
+        }
+        private ChiTietHoaDon CreateChiTietHoaDonFromInputs()
+        {
+            return new ChiTietHoaDon
+            {
+                MaHoaDon = txtMaHoaDon.Text.Trim(),
+                MaSanPham = txtMaSanPham.Text.Trim(),
+                SoLuong = int.Parse(txtSoLuong.Text),
+                DonGia = decimal.Parse(txtDonGia.Text),
+                GiamGia = string.IsNullOrEmpty(txtGiamGia.Text) ? 0 : int.Parse(txtGiamGia.Text)
             };
         }
 
@@ -192,5 +235,7 @@ namespace BaiTapLon.View
             txtVAT.Text = "0.00";
             txtThanhToan.Text = "0.00";
         }
+
+
     }
 }

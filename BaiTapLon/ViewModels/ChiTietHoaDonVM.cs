@@ -11,7 +11,9 @@ namespace BaiTapLon.ViewModels
     public class ChiTietHoaDonVM : INotifyPropertyChanged
     {
         public BindingList<HoaDon> HoaDonList { get; private set; } = new BindingList<HoaDon>();
-        private readonly string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        public BindingList<ChiTietHoaDon> ChiTietHoaDonList { get; private set; } = new BindingList<ChiTietHoaDon>();
+
+        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         private decimal tongTien;
         public decimal TongTien
@@ -43,32 +45,26 @@ namespace BaiTapLon.ViewModels
         }
 
         // Lấy tất cả hóa đơn
-        public BindingList<HoaDon> LayTatCaHoaDon()
+        public BindingList<ChiTietHoaDon> LayTatCaHoaDonCT()
         {
-            HoaDonList.Clear();
+            ChiTietHoaDonList.Clear();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM HoaDon";
+                    string sql = "SELECT * FROM ChiTietHoaDon";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            HoaDonList.Add(new HoaDon
+                            ChiTietHoaDonList.Add(new ChiTietHoaDon
                             {
                                 MaHoaDon = reader["MaHoaDon"].ToString(),
-                                MaKhachHang = reader["MaKhachHang"].ToString(),
                                 MaSanPham = reader["MaSanPham"].ToString(),
                                 SoLuong = Convert.ToInt32(reader["SoLuong"]),
                                 DonGia = Convert.ToDecimal(reader["DonGia"]),
-                                NgayLap = Convert.ToDateTime(reader["NgayLap"]),
-                                GiamGia = Convert.ToInt32(reader["GiamGia"]),
-                                TongTien = Convert.ToDecimal(reader["TongTien"]),
-                                VAT = Convert.ToDecimal(reader["VAT"]),
-                                ThanhToan = Convert.ToDecimal(reader["ThanhToan"])
                             });
                         }
                     }
@@ -81,7 +77,7 @@ namespace BaiTapLon.ViewModels
                     MessageBox.Show("Lỗi khi tải danh sách hóa đơn: " + ex.Message);
                 }
             }
-            return HoaDonList;
+            return ChiTietHoaDonList;
         }
 
         // Tính toán tổng tiền và VAT
@@ -107,7 +103,7 @@ namespace BaiTapLon.ViewModels
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Thanh toán hóa đơn thành công.");
-                        LayTatCaHoaDon(); // Làm mới danh sách hóa đơn
+                        LayTatCaHoaDonCT(); // Làm mới danh sách hóa đơn
                     }
                     else
                     {
@@ -123,6 +119,8 @@ namespace BaiTapLon.ViewModels
         public DataTable GetHoaDonReportData(string maHoaDon)
         {
             var selectedHoaDon = HoaDonList.FirstOrDefault(hd => hd.MaHoaDon == maHoaDon);
+            var selectedChiTietHoaDon = ChiTietHoaDonList.FirstOrDefault(cthd => cthd.MaHoaDon == maHoaDon);
+
             if (selectedHoaDon == null)
             {
                 MessageBox.Show("Không tìm thấy hóa đơn với mã này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -146,11 +144,11 @@ namespace BaiTapLon.ViewModels
                 row["NgayLap"] = selectedHoaDon.NgayLap;
                 row["MaKhachHang"] = selectedHoaDon.MaKhachHang ?? string.Empty;
                 row["TenKhachHang"] = string.Empty; // Sẽ lấy từ form hoặc cơ sở dữ liệu sau
-                row["MaSanPham"] = selectedHoaDon.MaSanPham ?? string.Empty;
-                row["SoLuong"] = selectedHoaDon.SoLuong;
-                row["DonGia"] = selectedHoaDon.DonGia;
-                row["GiamGia"] = selectedHoaDon.GiamGia;
-                row["ThanhTien"] = selectedHoaDon.ThanhTien;
+                row["MaSanPham"] = selectedChiTietHoaDon.MaSanPham ?? string.Empty;
+                row["SoLuong"] = selectedChiTietHoaDon.SoLuong;
+                row["DonGia"] = selectedChiTietHoaDon.DonGia;
+                row["GiamGia"] =selectedChiTietHoaDon.GiamGia;
+                row["ThanhTien"] =  selectedChiTietHoaDon.ThanhTien;
                 row["TongTien"] = selectedHoaDon.TongTien;
                 row["VAT"] = selectedHoaDon.VAT;
                 row["ThanhToan"] = selectedHoaDon.ThanhToan;

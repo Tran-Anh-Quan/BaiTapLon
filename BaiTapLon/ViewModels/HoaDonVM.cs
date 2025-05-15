@@ -10,7 +10,9 @@ namespace BaiTapLon.ViewModels
     public class HoaDonVM : INotifyPropertyChanged
     {
         public BindingList<HoaDon> HoaDonList { get; private set; } = new BindingList<HoaDon>();
-        private string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        public BindingList<ChiTietHoaDon> ChiTietHoaDonList { get; private set; } = new BindingList<ChiTietHoaDon>();
+
+        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,7 +24,7 @@ namespace BaiTapLon.ViewModels
         // Lấy danh sách tất cả hóa đơn
         public void LayTatCaHoaDon()
         {
-            HoaDonList.Clear();
+             HoaDonList.Clear();
             using (var conn = new SqlConnection(connectionString))
             {
                 try
@@ -39,10 +41,6 @@ namespace BaiTapLon.ViewModels
                                 {
                                     MaHoaDon = reader["MaHoaDon"].ToString(),
                                     MaKhachHang = reader["MaKhachHang"].ToString(),
-                                    MaSanPham = reader["MaSanPham"].ToString(),
-                                    SoLuong = int.Parse(reader["SoLuong"].ToString()),
-                                    DonGia = decimal.Parse(reader["DonGia"].ToString()),
-                                    GiamGia = int.Parse(reader["GiamGia"].ToString()),
                                     NgayLap = DateTime.Parse(reader["NgayLap"].ToString()),
                                     TongTien = decimal.Parse(reader["TongTien"].ToString()),
                                     VAT = decimal.Parse(reader["VAT"].ToString()),
@@ -80,17 +78,13 @@ namespace BaiTapLon.ViewModels
             {
                 try
                 {
-                    string sql = @"INSERT INTO HoaDon (MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, TongTien, VAT, ThanhToan)
-                                   VALUES (@MaHoaDon, @MaKhachHang, @MaSanPham, @SoLuong, @DonGia, @NgayLap, @GiamGia , @TongTien, @VAT, @ThanhToan)";
+                    string sql = @"INSERT INTO HoaDon (MaHoaDon,MaKhachHang, NgayLap,  TongTien, VAT, ThanhToan)
+                                   VALUES (@MaHoaDon, @MaKhachHang,@NgayLap, @TongTien, @VAT, @ThanhToan)";
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@MaHoaDon", hd.MaHoaDon);
                         cmd.Parameters.AddWithValue("@MaKhachHang", hd.MaKhachHang);
-                        cmd.Parameters.AddWithValue("@MaSanPham", hd.MaSanPham);
-                        cmd.Parameters.AddWithValue("@SoLuong", hd.SoLuong);
-                        cmd.Parameters.AddWithValue("@DonGia", hd.DonGia);
                         cmd.Parameters.AddWithValue("@NgayLap", hd.NgayLap);
-                        cmd.Parameters.AddWithValue("@GiamGia", hd.GiamGia);
                         cmd.Parameters.AddWithValue("@TongTien", hd.TongTien);
                         cmd.Parameters.AddWithValue("@VAT", hd.VAT);
                         cmd.Parameters.AddWithValue("@ThanhToan", hd.ThanhToan);
@@ -116,6 +110,52 @@ namespace BaiTapLon.ViewModels
             }
             return false;
         }
+        public bool ThemHoaDonCT(ChiTietHoaDon cthd)
+        {
+            if (cthd == null || string.IsNullOrWhiteSpace(cthd.MaHoaDon))
+            {
+                MessageBox.Show("Thông tin hóa đơn chi tiết không hợp lệ.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            using (var conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    string sql = @"INSERT INTO ChiTietHoaDon (MaHoaDon, MaSanPham, SoLuong, DonGia, GiamGia)
+                           VALUES (@MaHoaDon, @MaSanPham, @SoLuong, @DonGia, @GiamGia)";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaHoaDon", cthd.MaHoaDon);
+                        cmd.Parameters.AddWithValue("@MaSanPham", cthd.MaSanPham);
+                        cmd.Parameters.AddWithValue("@SoLuong", cthd.SoLuong);
+                        cmd.Parameters.AddWithValue("@DonGia", cthd.DonGia);
+                        cmd.Parameters.AddWithValue("@GiamGia", cthd.GiamGia);
+
+                        conn.Open();
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            MessageBox.Show("Thêm chi tiết hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không thêm được chi tiết hóa đơn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi thêm chi tiết hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            return false;
+        }
 
         // Sửa hóa đơn
         public void SuaHoaDon(HoaDon hd)
@@ -131,19 +171,16 @@ namespace BaiTapLon.ViewModels
                 try
                 {
                     conn.Open();
-                    string sql = @"UPDATE HoaDon 
-                                   SET MaKhachHang = @MaKhachHang, MaSanPham = @MaSanPham, SoLuong = @SoLuong, 
-                                       DonGia = @DonGia, GiamGia = @GiamGia, NgayLap = @NgayLap, 
-                                       TongTien = @TongTien, VAT = @VAT, ThanhToan = @ThanhToan 
-                                   WHERE MaHoaDon = @MaHoaDon";
+                    string sql = @"
+                            UPDATE HoaDon 
+                            SET MaKhachHang = @MaKhachHang, NgayLap = @NgayLap, 
+                                TongTien = @TongTien, VAT = @VAT, ThanhToan = @ThanhToan 
+                            WHERE MaHoaDon = @MaHoaDon";
+
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@MaHoaDon", hd.MaHoaDon);
                         cmd.Parameters.AddWithValue("@MaKhachHang", hd.MaKhachHang);
-                        cmd.Parameters.AddWithValue("@MaSanPham", hd.MaSanPham);
-                        cmd.Parameters.AddWithValue("@SoLuong", hd.SoLuong);
-                        cmd.Parameters.AddWithValue("@DonGia", hd.DonGia);
-                        cmd.Parameters.AddWithValue("@GiamGia", hd.GiamGia);
                         cmd.Parameters.AddWithValue("@NgayLap", hd.NgayLap);
                         cmd.Parameters.AddWithValue("@TongTien", hd.TongTien);
                         cmd.Parameters.AddWithValue("@VAT", hd.VAT);
@@ -171,7 +208,57 @@ namespace BaiTapLon.ViewModels
                 }
             }
         }
+        // Sửa hóa đơn
+        public void SuaHoaDonCT(ChiTietHoaDon cthd)
+        {
+            if (string.IsNullOrWhiteSpace(cthd.MaHoaDon))
+            {
+                MessageBox.Show("Vui lòng nhập mã hóa đơn để sửa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            using (var conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = @"                       
+
+                            UPDATE ChiTietHoaDon 
+                            SET MaSanPham = @MaSanPham, GiamGia = @GiamGia, SoLuong = @SoLuong, DonGia = @DonGia 
+                            WHERE MaHoaDon = @MaHoaDon AND MaSanPham = @OldMaSanPham;
+                            ";
+
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaHoaDon", cthd.MaHoaDon);
+                        cmd.Parameters.AddWithValue("@MaSanPham", cthd.MaSanPham);
+                        cmd.Parameters.AddWithValue("@SoLuong", cthd.SoLuong);
+                        cmd.Parameters.AddWithValue("@DonGia", cthd.DonGia);
+                        cmd.Parameters.AddWithValue("@GiamGia", cthd.GiamGia);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Sửa hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LayTatCaHoaDon(); // Làm mới danh sách
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy hóa đơn để sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi sửa hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
         // Xóa hóa đơn
         public void XoaHoaDon(string maHoaDon)
         {
@@ -186,7 +273,7 @@ namespace BaiTapLon.ViewModels
                 try
                 {
                     conn.Open();
-                    string sql = "DELETE FROM HoaDon WHERE MaHoaDon = @MaHoaDon";
+                    string sql = "DELETE FROM ChiTietHoaDon WHERE MaHoaDon = @MaHoaDon";
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@MaHoaDon", maHoaDon);

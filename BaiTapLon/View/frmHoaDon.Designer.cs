@@ -1,6 +1,6 @@
 ﻿namespace BaiTapLon.View
 {
-    partial class frmQuanLyHoaDon
+    partial class frmHoaDon
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -369,7 +369,7 @@
             this.dgvHoaDon.Size = new System.Drawing.Size(820, 248);
             this.dgvHoaDon.TabIndex = 0;
             // 
-            // frmQuanLyHoaDon
+            // frmHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -380,7 +380,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
-            this.Name = "frmQuanLyHoaDon";
+            this.Name = "frmHoaDon";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản Lý Hóa Đơn";
             this.pnlHeader.ResumeLayout(false);

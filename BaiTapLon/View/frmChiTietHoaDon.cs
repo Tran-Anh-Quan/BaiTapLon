@@ -170,5 +170,7 @@ namespace BaiTapLon.View
             frmXuatHoaDon xuatHoaDon = new frmXuatHoaDon();
             xuatHoaDon.Show();
         }
+
+       
     }
 }

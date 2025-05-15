@@ -19,10 +19,10 @@ namespace BaiTapLon.View
             string tenDangNhap = txtTenDangNhap.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
 
-            if (viewModel.DangNhapTaiKhoan(tenDangNhap, matKhau))
+            if (viewModel.DangNhapTaiKhoan(tenDangNhap, matKhau, this ))
             {
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                frmQuanLyTaiKhoan frm = new frmQuanLyTaiKhoan();
+                frmMain frm = new frmMain();
                 frm.Show();
                 this.Hide();
             }

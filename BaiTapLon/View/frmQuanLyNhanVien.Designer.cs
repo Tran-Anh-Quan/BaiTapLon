@@ -28,7 +28,7 @@
             this.lblLuong = new System.Windows.Forms.Label();
             this.dtpNgayVaoLam = new System.Windows.Forms.DateTimePicker();
             this.lblNgayVaoLam = new System.Windows.Forms.Label();
-            this.txtChucVu = new System.Windows.Forms.TextBox();
+            this.cboChucVu = new System.Windows.Forms.ComboBox();
             this.lblChucVu = new System.Windows.Forms.Label();
             this.cboGioiTinh = new System.Windows.Forms.ComboBox();
             this.lblGioiTinh = new System.Windows.Forms.Label();
@@ -80,7 +80,7 @@
             this.pnlInput.Controls.Add(this.lblLuong);
             this.pnlInput.Controls.Add(this.dtpNgayVaoLam);
             this.pnlInput.Controls.Add(this.lblNgayVaoLam);
-            this.pnlInput.Controls.Add(this.txtChucVu);
+            this.pnlInput.Controls.Add(this.cboChucVu);
             this.pnlInput.Controls.Add(this.lblChucVu);
             this.pnlInput.Controls.Add(this.cboGioiTinh);
             this.pnlInput.Controls.Add(this.lblGioiTinh);
@@ -197,13 +197,14 @@
             this.lblNgayVaoLam.TabIndex = 11;
             this.lblNgayVaoLam.Text = "Ngày Vào Làm:";
             // 
-            // txtChucVu
+            // cboChucVu
             // 
-            this.txtChucVu.Location = new System.Drawing.Point(400, 48);
-            this.txtChucVu.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtChucVu.Name = "txtChucVu";
-            this.txtChucVu.Size = new System.Drawing.Size(200, 22);
-            this.txtChucVu.TabIndex = 8;
+            this.cboChucVu.FormattingEnabled = true;
+            this.cboChucVu.Location = new System.Drawing.Point(400, 48);
+            this.cboChucVu.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboChucVu.Name = "cboChucVu";
+            this.cboChucVu.Size = new System.Drawing.Size(200, 24);
+            this.cboChucVu.TabIndex = 8;
             // 
             // lblChucVu
             // 
@@ -230,7 +231,9 @@
             this.lblGioiTinh.Name = "lblGioiTinh";
             this.lblGioiTinh.Size = new System.Drawing.Size(63, 16);
             this.lblGioiTinh.TabIndex = 7;
-            this.lblGioiTinh.Text = "Giới Tính:";
+            this.lblGioiTinh
+
+.Text = "Giới Tính:";
             // 
             // txtSoDienThoai
             // 
@@ -324,7 +327,6 @@
             this.pnlGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhanVien)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         private System.Windows.Forms.Panel pnlHeader;
@@ -338,7 +340,7 @@
         private System.Windows.Forms.Label lblSoDienThoai;
         private System.Windows.Forms.ComboBox cboGioiTinh;
         private System.Windows.Forms.Label lblGioiTinh;
-        private System.Windows.Forms.TextBox txtChucVu;
+        private System.Windows.Forms.ComboBox cboChucVu;
         private System.Windows.Forms.Label lblChucVu;
         private System.Windows.Forms.DateTimePicker dtpNgayVaoLam;
         private System.Windows.Forms.Label lblNgayVaoLam;

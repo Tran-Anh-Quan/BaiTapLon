@@ -79,29 +79,20 @@ namespace BaiTapLon.View
         private void btnTim_Click(object sender, EventArgs e)
         {
             string keyword = txtMaKhachHang.Text.Trim();
-            if (string.IsNullOrEmpty(keyword))
-            {
-                MessageBox.Show("Vui lòng nhập mã khách hàng hoặc tên để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var result = viewModel.TimKiemKhachHang(keyword);
-            if (result.Count > 0)
-            {
-                dgvKhachHang.DataSource = result;
-            }
-            else
-            {
-                dgvKhachHang.DataSource = viewModel.KhachHangList;
-            }
+            var result = viewModel.TimKiemKhachHang(keyword); // Tìm kiếm khách hàng
+            dgvKhachHang.DataSource = null; // Xóa DataSource cũ để tránh xung đột
+            dgvKhachHang.DataSource = result; // Gán lại DataSource để làm mới DataGridView
+            dgvKhachHang.Refresh(); // Làm mới giao diện DataGridView
         }
 
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearInputs();
-            LoadKhachHangData();
+            viewModel.LayTatCaKhachHang(); // Tải lại danh sách từ database
+            dgvKhachHang.DataSource = null; // Xóa DataSource cũ
+            dgvKhachHang.DataSource = viewModel.KhachHangList; // Cập nhật DataGridView
+            dgvKhachHang.Refresh(); // Làm mới giao diện
         }
-
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();

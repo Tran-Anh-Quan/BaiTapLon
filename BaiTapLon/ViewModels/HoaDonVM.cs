@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
     public class HoaDonVM : INotifyPropertyChanged
     {
         public BindingList<HoaDon> HoaDonList { get; private set; } = new BindingList<HoaDon>();
-        private readonly string connectionString = @"Data Source=LAPTOP-I4S7V50U\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True;TrustServerCertificate=True";
+        private string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -19,181 +19,155 @@ namespace BaiTapLon.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        // Lấy tất cả hóa đơn
+        // Lấy danh sách tất cả hóa đơn
         public void LayTatCaHoaDon()
         {
             HoaDonList.Clear();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
                     string sql = "SELECT * FROM HoaDon";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        while (reader.Read())
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            HoaDonList.Add(new HoaDon
+                            while (reader.Read())
                             {
-                                MaHoaDon = reader["MaHoaDon"].ToString(),
-                                MaKhachHang = reader["MaKhachHang"].ToString(),
-                                MaSanPham = reader["MaSanPham"].ToString(),
-                                SoLuong = Convert.ToInt32(reader["SoLuong"]),
-                                DonGia = Convert.ToDecimal(reader["DonGia"]),
-                                NgayLap = Convert.ToDateTime(reader["NgayLap"]),
-                                GiamGia = Convert.ToInt32(reader["GiamGia"]),
-                                TongTien = Convert.ToDecimal(reader["TongTien"]),
-                                VAT = Convert.ToDecimal(reader["VAT"]),
-                                ThanhToan = Convert.ToDecimal(reader["ThanhToan"])
-                            });
+                                HoaDonList.Add(new HoaDon
+                                {
+                                    MaHoaDon = reader["MaHoaDon"].ToString(),
+                                    MaKhachHang = reader["MaKhachHang"].ToString(),
+                                    MaSanPham = reader["MaSanPham"].ToString(),
+                                    SoLuong = int.Parse(reader["SoLuong"].ToString()),
+                                    DonGia = decimal.Parse(reader["DonGia"].ToString()),
+                                    GiamGia = int.Parse(reader["GiamGia"].ToString()),
+                                    NgayLap = DateTime.Parse(reader["NgayLap"].ToString()),
+                                    TongTien = decimal.Parse(reader["TongTien"].ToString()),
+                                    VAT = decimal.Parse(reader["VAT"].ToString()),
+                                    ThanhToan = decimal.Parse(reader["ThanhToan"].ToString())
+                                });
+                            }
                         }
                     }
+                    if (HoaDonList.Count == 0)
+                    {
+                        MessageBox.Show("Danh sách hóa đơn trống. Vui lòng thêm hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi tải danh sách hóa đơn: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi tải danh sách hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // Lấy hóa đơn theo mã
-        public HoaDon LayHoaDonTheoMa(string maHoaDon)
+        // Thêm hóa đơn
+        public bool ThemHoaDon(HoaDon hd)
         {
-            HoaDon hoaDon = null;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            if (hd == null || string.IsNullOrWhiteSpace(hd.MaHoaDon))
             {
-                try
-                {
-                    conn.Open();
-                    string sql = "SELECT * FROM HoaDon WHERE MaHoaDon = @MaHoaDon";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaHoaDon", maHoaDon);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            hoaDon = new HoaDon
-                            {
-                                MaHoaDon = reader["MaHoaDon"].ToString(),
-                                MaKhachHang = reader["MaKhachHang"].ToString(),
-                                MaSanPham = reader["MaSanPham"].ToString(),
-                                SoLuong = Convert.ToInt32(reader["SoLuong"]),
-                                DonGia = Convert.ToDecimal(reader["DonGia"]),
-                                NgayLap = Convert.ToDateTime(reader["NgayLap"]),
-                                GiamGia = Convert.ToInt32(reader["GiamGia"]),
-                                TongTien = Convert.ToDecimal(reader["TongTien"]),
-                                VAT = Convert.ToDecimal(reader["VAT"]),
-                                ThanhToan = Convert.ToDecimal(reader["ThanhToan"])
-                            };
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi khi lấy hóa đơn: " + ex.Message);
-                }
-            }
-            return hoaDon;
-        }
-
-        // Thêm hóa đơn mới
-        public bool ThemHoaDon(HoaDon hoaDon)
-        {
-            if (hoaDon == null || string.IsNullOrWhiteSpace(hoaDon.MaHoaDon))
-            {
-                MessageBox.Show("Thông tin hóa đơn không hợp lệ.");
+                MessageBox.Show("Thông tin hóa đơn không hợp lệ.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
-                    string sql = @"INSERT INTO HoaDon 
-                                   (MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, TongTien, VAT, ThanhToan)
-                                   VALUES (@MaHD, @MaKH, @MaSP, @SoLuong, @DonGia, @NgayLap, @GiamGia, @TongTien, @VAT, @ThanhToan)";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaHD", hoaDon.MaHoaDon);
-                    cmd.Parameters.AddWithValue("@MaKH", hoaDon.MaKhachHang);
-                    cmd.Parameters.AddWithValue("@MaSP", hoaDon.MaSanPham);
-                    cmd.Parameters.AddWithValue("@SoLuong", hoaDon.SoLuong);
-                    cmd.Parameters.AddWithValue("@DonGia", hoaDon.DonGia);
-                    cmd.Parameters.AddWithValue("@NgayLap", hoaDon.NgayLap);
-                    cmd.Parameters.AddWithValue("@GiamGia", hoaDon.GiamGia);
-                    cmd.Parameters.AddWithValue("@TongTien", hoaDon.TongTien);
-                    cmd.Parameters.AddWithValue("@VAT", hoaDon.VAT);
-                    cmd.Parameters.AddWithValue("@ThanhToan", hoaDon.ThanhToan);
-
-                    conn.Open();
-                    int rows = cmd.ExecuteNonQuery();
-                    if (rows > 0)
+                    string sql = @"INSERT INTO HoaDon (MaHoaDon, MaKhachHang, MaSanPham, SoLuong, DonGia, NgayLap, GiamGia, TongTien, VAT, ThanhToan)
+                                   VALUES (@MaHoaDon, @MaKhachHang, @MaSanPham, @SoLuong, @DonGia, @NgayLap, @GiamGia , @TongTien, @VAT, @ThanhToan)";
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        MessageBox.Show("Thêm hóa đơn thành công.");
-                        LayTatCaHoaDon();
-                        return true;
+                        cmd.Parameters.AddWithValue("@MaHoaDon", hd.MaHoaDon);
+                        cmd.Parameters.AddWithValue("@MaKhachHang", hd.MaKhachHang);
+                        cmd.Parameters.AddWithValue("@MaSanPham", hd.MaSanPham);
+                        cmd.Parameters.AddWithValue("@SoLuong", hd.SoLuong);
+                        cmd.Parameters.AddWithValue("@DonGia", hd.DonGia);
+                        cmd.Parameters.AddWithValue("@NgayLap", hd.NgayLap);
+                        cmd.Parameters.AddWithValue("@GiamGia", hd.GiamGia);
+                        cmd.Parameters.AddWithValue("@TongTien", hd.TongTien);
+                        cmd.Parameters.AddWithValue("@VAT", hd.VAT);
+                        cmd.Parameters.AddWithValue("@ThanhToan", hd.ThanhToan);
+
+                        conn.Open();
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            MessageBox.Show("Thêm hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LayTatCaHoaDon(); // Làm mới danh sách
+                            return true;
+                        }
                     }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi thêm hóa đơn: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi thêm hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             return false;
         }
 
         // Sửa hóa đơn
-        public void SuaHoaDon(HoaDon hoaDon)
+        public void SuaHoaDon(HoaDon hd)
         {
-            if (hoaDon == null || string.IsNullOrWhiteSpace(hoaDon.MaHoaDon))
+            if (string.IsNullOrWhiteSpace(hd.MaHoaDon))
             {
-                MessageBox.Show("Thông tin hóa đơn không hợp lệ.");
+                MessageBox.Show("Vui lòng nhập mã hóa đơn để sửa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
                     string sql = @"UPDATE HoaDon 
-                                   SET MaKhachHang = @MaKhachHang, 
-                                       MaSanPham = @MaSanPham, 
-                                       SoLuong = @SoLuong, 
-                                       DonGia = @DonGia, 
-                                       NgayLap = @NgayLap, 
-                                       GiamGia = @GiamGia, 
-                                       TongTien = @TongTien, 
-                                       VAT = @VAT, 
-                                       ThanhToan = @ThanhToan 
+                                   SET MaKhachHang = @MaKhachHang, MaSanPham = @MaSanPham, SoLuong = @SoLuong, 
+                                       DonGia = @DonGia, GiamGia = @GiamGia, NgayLap = @NgayLap, 
+                                       TongTien = @TongTien, VAT = @VAT, ThanhToan = @ThanhToan 
                                    WHERE MaHoaDon = @MaHoaDon";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaHoaDon", hoaDon.MaHoaDon);
-                    cmd.Parameters.AddWithValue("@MaKhachHang", hoaDon.MaKhachHang);
-                    cmd.Parameters.AddWithValue("@MaSanPham", hoaDon.MaSanPham);
-                    cmd.Parameters.AddWithValue("@SoLuong", hoaDon.SoLuong);
-                    cmd.Parameters.AddWithValue("@DonGia", hoaDon.DonGia);
-                    cmd.Parameters.AddWithValue("@NgayLap", hoaDon.NgayLap);
-                    cmd.Parameters.AddWithValue("@GiamGia", hoaDon.GiamGia);
-                    cmd.Parameters.AddWithValue("@TongTien", hoaDon.TongTien);
-                    cmd.Parameters.AddWithValue("@VAT", hoaDon.VAT);
-                    cmd.Parameters.AddWithValue("@ThanhToan", hoaDon.ThanhToan);
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaHoaDon", hd.MaHoaDon);
+                        cmd.Parameters.AddWithValue("@MaKhachHang", hd.MaKhachHang);
+                        cmd.Parameters.AddWithValue("@MaSanPham", hd.MaSanPham);
+                        cmd.Parameters.AddWithValue("@SoLuong", hd.SoLuong);
+                        cmd.Parameters.AddWithValue("@DonGia", hd.DonGia);
+                        cmd.Parameters.AddWithValue("@GiamGia", hd.GiamGia);
+                        cmd.Parameters.AddWithValue("@NgayLap", hd.NgayLap);
+                        cmd.Parameters.AddWithValue("@TongTien", hd.TongTien);
+                        cmd.Parameters.AddWithValue("@VAT", hd.VAT);
+                        cmd.Parameters.AddWithValue("@ThanhToan", hd.ThanhToan);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Sửa hóa đơn thành công.");
-                        LayTatCaHoaDon();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Sửa hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LayTatCaHoaDon(); // Làm mới danh sách
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy hóa đơn để sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Không tìm thấy hóa đơn để sửa.");
-                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi sửa hóa đơn: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi sửa hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -203,47 +177,58 @@ namespace BaiTapLon.ViewModels
         {
             if (string.IsNullOrEmpty(maHoaDon))
             {
-                MessageBox.Show("Vui lòng nhập mã hóa đơn để xóa.");
+                MessageBox.Show("Vui lòng nhập mã hóa đơn để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
                     string sql = "DELETE FROM HoaDon WHERE MaHoaDon = @MaHoaDon";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@MaHoaDon", maHoaDon);
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        MessageBox.Show("Xóa hóa đơn thành công.");
-                        LayTatCaHoaDon();
+                        cmd.Parameters.AddWithValue("@MaHoaDon", maHoaDon);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Xóa hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LayTatCaHoaDon(); // Làm mới danh sách
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy hóa đơn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Không tìm thấy hóa đơn để xóa.");
-                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối database: {ex.Message}. Vui lòng kiểm tra cấu hình SQL Server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi xóa hóa đơn: " + ex.Message);
+                    MessageBox.Show($"Lỗi khi xóa hóa đơn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // Tìm kiếm hóa đơn theo mã hoặc khách hàng
+        // Tìm kiếm hóa đơn
         public BindingList<HoaDon> TimKiemHoaDon(string keyword)
         {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                LayTatCaHoaDon(); // Tải lại danh sách từ database nếu từ khóa rỗng
+                return HoaDonList;
+            }
+
             var result = new BindingList<HoaDon>(HoaDonList.Where(hd =>
-               hd.MaHoaDon.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
-               hd.MaKhachHang.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToList());
+                hd.MaHoaDon.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                hd.MaKhachHang.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToList());
 
             if (result.Count == 0)
             {
-                MessageBox.Show("Không tìm thấy hóa đơn nào.");
+                MessageBox.Show("Không tìm thấy hóa đơn nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return result;
         }

@@ -199,6 +199,7 @@ namespace BaiTapLon.View
             this.pnlInvoiceDetails.Name = "pnlInvoiceDetails";
             this.pnlInvoiceDetails.Size = new System.Drawing.Size(860, 300);
             this.pnlInvoiceDetails.TabIndex = 2;
+            this.pnlInvoiceDetails.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInvoiceDetails_Paint);
             // 
             // dgvHoaDon
             // 

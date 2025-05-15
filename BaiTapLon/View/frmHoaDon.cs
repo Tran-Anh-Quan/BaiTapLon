@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
-    public partial class frmQuanLyHoaDon : Form
+    public partial class frmHoaDon : Form
     {
         private readonly HoaDonVM viewModel;
 
-        public frmQuanLyHoaDon()
+        public frmHoaDon()
         {
             InitializeComponent();
             viewModel = new HoaDonVM();
@@ -111,29 +111,20 @@ namespace BaiTapLon.View
         private void btnTim_Click(object sender, EventArgs e)
         {
             string keyword = txtMaHoaDon.Text.Trim();
-            if (string.IsNullOrEmpty(keyword))
-            {
-                MessageBox.Show("Vui lòng nhập mã hóa đơn hoặc mã khách hàng để tìm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var result = viewModel.TimKiemHoaDon(keyword);
-            if (result.Count > 0)
-            {
-                dgvHoaDon.DataSource = result;
-            }
-            else
-            {
-                dgvHoaDon.DataSource = viewModel.HoaDonList;
-            }
+            var result = viewModel.TimKiemHoaDon(keyword); // Tìm kiếm hóa đơn
+            dgvHoaDon.DataSource = null; // Xóa DataSource cũ để tránh xung đột
+            dgvHoaDon.DataSource = result; // Gán lại DataSource để làm mới DataGridView
+            dgvHoaDon.Refresh(); // Làm mới giao diện DataGridView
         }
 
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearInputs();
-            LoadHoaDonData();
+            viewModel.LayTatCaHoaDon(); // Tải lại danh sách từ database
+            dgvHoaDon.DataSource = null; // Xóa DataSource cũ
+            dgvHoaDon.DataSource = viewModel.HoaDonList; // Cập nhật DataGridView
+            dgvHoaDon.Refresh(); // Làm mới giao diện
         }
-
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();

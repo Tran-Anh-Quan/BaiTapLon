@@ -50,18 +50,7 @@ namespace BaiTapLon.View
             viewModel.LayTatCaNhanVien();
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            if (!ValidateInputs()) return;
-
-            NhanVien nv = CreateNhanVienFromInputs();
-            if (viewModel.ThemNhanVien(nv))
-            {
-                ClearInputs();
-            }
-        }
-
-        private void btnSua_Click(object sender, EventArgs e)
+        private void btnSua_Click_1(object sender, EventArgs e)
         {
             if (!ValidateInputs()) return;
 
@@ -93,16 +82,7 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnTim_Click(object peacocksender, EventArgs e)
-        {
-            string keyword = txtMaNhanVien.Text.Trim();
-            var result = viewModel.TimKiemNhanVien(keyword);
-            dgvNhanVien.DataSource = null;
-            dgvNhanVien.DataSource = result;
-            dgvNhanVien.Refresh();
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
+        private void btnLamMoi_Click_1(object sender, EventArgs e)
         {
             ClearInputs();
             viewModel.LayTatCaNhanVien();
@@ -176,5 +156,32 @@ namespace BaiTapLon.View
             dtpNgayVaoLam.Value = DateTime.Now;
             txtLuong.Clear();
         }
+
+        private void btnTim_Click_1(object sender, EventArgs e)
+        {
+            string keyword = txtMaNhanVien.Text.Trim();
+            var result = viewModel.TimKiemNhanVien(keyword);
+            dgvNhanVien.DataSource = null;
+            dgvNhanVien.DataSource = result;
+            dgvNhanVien.Refresh();
+        }
+
+        private void lblTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnThem_Click_1(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            NhanVien nv = CreateNhanVienFromInputs();
+            if (viewModel.ThemNhanVien(nv))
+            {
+                ClearInputs();
+            }
+        }
+
+
     }
 }

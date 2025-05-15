@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
     public class NhanVienVM : INotifyPropertyChanged
     {
         public BindingList<NhanVien> NhanVienList { get; private set; } = new BindingList<NhanVien>();
-        private string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

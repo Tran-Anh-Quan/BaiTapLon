@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace BaiTapLon.View
 {
@@ -87,7 +88,7 @@ namespace BaiTapLon.View
             this.pnlCustomerInfo.Controls.Add(this.lblMaHD);
             this.pnlCustomerInfo.Location = new System.Drawing.Point(20, 70);
             this.pnlCustomerInfo.Name = "pnlCustomerInfo";
-            this.pnlCustomerInfo.Size = new System.Drawing.Size(860, 150);
+            this.pnlCustomerInfo.Size = new System.Drawing.Size(860, 137);
             this.pnlCustomerInfo.TabIndex = 1;
             // 
             // btnXuatBaoCao
@@ -195,7 +196,7 @@ namespace BaiTapLon.View
             this.pnlInvoiceDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlInvoiceDetails.Controls.Add(this.dgvHoaDon);
             this.pnlInvoiceDetails.Controls.Add(this.lblInvoiceDetails);
-            this.pnlInvoiceDetails.Location = new System.Drawing.Point(20, 240);
+            this.pnlInvoiceDetails.Location = new System.Drawing.Point(20, 223);
             this.pnlInvoiceDetails.Name = "pnlInvoiceDetails";
             this.pnlInvoiceDetails.Size = new System.Drawing.Size(860, 300);
             this.pnlInvoiceDetails.TabIndex = 2;
@@ -229,7 +230,7 @@ namespace BaiTapLon.View
             this.pnlSummary.Controls.Add(this.lblThanhToan);
             this.pnlSummary.Controls.Add(this.lblVAT);
             this.pnlSummary.Controls.Add(this.lblTongTien);
-            this.pnlSummary.Location = new System.Drawing.Point(20, 560);
+            this.pnlSummary.Location = new System.Drawing.Point(20, 540);
             this.pnlSummary.Name = "pnlSummary";
             this.pnlSummary.Size = new System.Drawing.Size(600, 80);
             this.pnlSummary.TabIndex = 3;
@@ -287,7 +288,7 @@ namespace BaiTapLon.View
             // 
             // btnThanhToan
             // 
-            this.btnThanhToan.Location = new System.Drawing.Point(700, 570);
+            this.btnThanhToan.Location = new System.Drawing.Point(721, 580);
             this.btnThanhToan.Name = "btnThanhToan";
             this.btnThanhToan.Size = new System.Drawing.Size(150, 40);
             this.btnThanhToan.TabIndex = 4;
@@ -298,7 +299,7 @@ namespace BaiTapLon.View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(900, 660);
+            this.ClientSize = new System.Drawing.Size(900, 664);
             this.Controls.Add(this.btnThanhToan);
             this.Controls.Add(this.pnlSummary);
             this.Controls.Add(this.pnlInvoiceDetails);
@@ -317,6 +318,11 @@ namespace BaiTapLon.View
             this.pnlSummary.PerformLayout();
             this.ResumeLayout(false);
 
+        }
+
+        private void pnlInvoiceDetails_Paint(object sender, PaintEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private Panel pnlHeader;

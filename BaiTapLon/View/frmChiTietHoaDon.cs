@@ -7,19 +7,23 @@ using System.Linq;
 using System.Windows.Forms;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
-using System.Data;
 using System.IO;
 
 namespace BaiTapLon.View
 {
     public partial class frmChiTietHoaDon : Form
     {
-        private readonly ChiTietHoaDonVM viewModel;
+        private readonly ChiTietHoaDonVM viewModelCT;
+        private readonly HoaDonVM viewModel;
+        private readonly HoaDonChiTietVM viewModelHDCT;
 
         public frmChiTietHoaDon()
         {
             InitializeComponent();
-            viewModel = new ChiTietHoaDonVM();
+            viewModel = new HoaDonVM();
+            viewModelCT = new ChiTietHoaDonVM();
+            viewModelHDCT = new HoaDonChiTietVM();
+
             SetupDataBindings();
             LoadHoaDonData();
         }
@@ -27,8 +31,8 @@ namespace BaiTapLon.View
         private void SetupDataBindings()
         {
             // Bind DataGridView to HoaDonList
-            dgvHoaDon.AutoGenerateColumns = false;
-            dgvHoaDon.DataSource = viewModel.HoaDonList;
+            var danhSach = viewModelHDCT.LayTatCaHoaDonGopChiTiet(); // có đúng là List<HoaDonChiTietDTO> không?
+            dgvHoaDon.DataSource = danhSach;
 
             // Define DataGridView columns
             dgvHoaDon.Columns.Clear();
@@ -82,10 +86,7 @@ namespace BaiTapLon.View
                 DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" }
             });
 
-            // Bind summary labels to ViewModel properties
-            lblTongTienValue.DataBindings.Add("Text", viewModel, "TongTien", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
-            lblVATValue.DataBindings.Add("Text", viewModel, "VAT", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
-            lblThanhToanValue.Text = "0.00"; // Will be updated after payment
+
 
             // Event handlers for buttons
             btnKiemTraKH.Click += BtnKiemTraKH_Click;
@@ -99,6 +100,7 @@ namespace BaiTapLon.View
         private void LoadHoaDonData()
         {
             viewModel.LayTatCaHoaDon();
+            viewModelCT.LayTatCaHoaDonCT();
         }
 
         private void BtnKiemTraKH_Click(object sender, EventArgs e)
@@ -135,7 +137,7 @@ namespace BaiTapLon.View
                 return;
             }
 
-            viewModel.ThanhToanHoaDon(maHoaDon);
+            viewModelCT.ThanhToanHoaDon(maHoaDon);
             // Update ThanhToanValue label
             var selectedHoaDon = viewModel.HoaDonList.FirstOrDefault(hd => hd.MaHoaDon == maHoaDon);
             if (selectedHoaDon != null)
@@ -146,14 +148,14 @@ namespace BaiTapLon.View
 
         private void BtnXuatBaoCao_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void DgvHoaDon_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvHoaDon.SelectedRows.Count > 0)
             {
-                var selectedHoaDon = (HoaDon)dgvHoaDon.SelectedRows[0].DataBoundItem;
+                var selectedHoaDon = (HoaDonChiTietDTO)dgvHoaDon.SelectedRows[0].DataBoundItem;
                 txtMaHD.Text = selectedHoaDon.MaHoaDon;
                 dtpNgayLap.Value = selectedHoaDon.NgayLap;
                 // Mock customer info (replace with actual database query)
@@ -166,11 +168,10 @@ namespace BaiTapLon.View
 
         private void btnXuatBaoCao_Click_1(object sender, EventArgs e)
         {
-            this.Hide();
             frmXuatHoaDon xuatHoaDon = new frmXuatHoaDon();
             xuatHoaDon.Show();
         }
 
-       
+
     }
 }

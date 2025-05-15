@@ -8,7 +8,7 @@ namespace BaiTapLon
     public partial class frmQuanLySanPham : Form
     {
         private SanPhamVM sanPhamVM;
-
+       
         public frmQuanLySanPham()
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace BaiTapLon
             sanPhamVM.LayTatCaSanPham();
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
+        private void btnThem_Click_1(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMaSanPham.Text) || string.IsNullOrWhiteSpace(txtTenSanPham.Text))
             {
@@ -62,7 +62,7 @@ namespace BaiTapLon
             }
         }
 
-        private void btnSua_Click(object sender, EventArgs e)
+        private void btnSua_Click_1(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMaSanPham.Text))
             {
@@ -80,7 +80,7 @@ namespace BaiTapLon
             ClearInputs();
         }
 
-        private void btnXoa_Click(object sender, EventArgs e)
+        private void btnXoa_Click_1(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMaSanPham.Text))
             {
@@ -98,11 +98,12 @@ namespace BaiTapLon
             dgvSanPham.DataSource = result;
         }
 
-        private void btnLamMoi_Click(object sender, EventArgs e)
+        private void btnLamMoi_Click_1(object sender, EventArgs e)
         {
             LoadSanPhamList();
             ClearInputs();
             txtTimKiem.Clear();
+            sanPhamVM.LayTatCaSanPham();
         }
 
         private void dgvSanPham_SelectionChanged(object sender, EventArgs e)
@@ -123,6 +124,11 @@ namespace BaiTapLon
             txtTenSanPham.Clear();
             txtDonGia.Clear();
             txtSoLuongTon.Clear();
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

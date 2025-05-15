@@ -60,7 +60,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChiTietHoaDon.cs" />
     <Compile Include="Models\HoaDon.cs" />
+    <Compile Include="Models\HoaDonChiTietDTO.cs" />
     <Compile Include="Models\KhachHang.cs" />
     <Compile Include="Models\NhanVien.cs" />
     <Compile Include="Models\SanPham.cs" />
@@ -74,6 +76,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ViewModels\ChiTietHoaDonVM.cs" />
+    <Compile Include="ViewModels\HoaDonChiTietVM.cs" />
     <Compile Include="ViewModels\HoaDonVM.cs" />
     <Compile Include="ViewModels\KhachHangVM.cs" />
     <Compile Include="ViewModels\NhanVienVM.cs" />

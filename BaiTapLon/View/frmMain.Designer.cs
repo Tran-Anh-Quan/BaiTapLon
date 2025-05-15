@@ -67,7 +67,7 @@
             this.mnuHoaDon,
             this.mnuTaiKhoan});
             this.mnuQuanLy.Name = "mnuQuanLy";
-            this.mnuQuanLy.Size = new System.Drawing.Size(75, 24);
+            this.mnuQuanLy.Size = new System.Drawing.Size(75, 26);
             this.mnuQuanLy.Text = "Quản Lý";
             // 
             // mnuSanPham

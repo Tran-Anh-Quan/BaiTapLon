@@ -87,6 +87,12 @@ namespace BaiTapLon.View
             });
 
 
+            lblTongTienValue.DataBindings.Add("Text", viewModel, "TongTien", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
+            lblVATValue.DataBindings.Add("Text", viewModel, "VAT", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
+            lblThanhToanValue.Text = "0.00"; // Will be updated after payment
+            lblTongTienValue.DataBindings.Add("Text", viewModel, "TongTien", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
+            lblVATValue.DataBindings.Add("Text", viewModel, "VAT", true, DataSourceUpdateMode.OnPropertyChanged, "0.00", "N2");
+            lblThanhToanValue.Text = "0.00"; // Will be updated after payment
 
             // Event handlers for buttons
             btnKiemTraKH.Click += BtnKiemTraKH_Click;

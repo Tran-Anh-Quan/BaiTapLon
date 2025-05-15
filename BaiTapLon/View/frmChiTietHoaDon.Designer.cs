@@ -200,7 +200,7 @@ namespace BaiTapLon.View
             this.pnlInvoiceDetails.Name = "pnlInvoiceDetails";
             this.pnlInvoiceDetails.Size = new System.Drawing.Size(860, 300);
             this.pnlInvoiceDetails.TabIndex = 2;
-            this.pnlInvoiceDetails.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInvoiceDetails_Paint);
+            //this.pnlInvoiceDetails.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInvoiceDetails_Paint);
             // 
             // dgvHoaDon
             // 
@@ -324,6 +324,11 @@ namespace BaiTapLon.View
         {
             throw new NotImplementedException();
         }
+
+        //private void pnlInvoiceDetails_Paint(object sender, PaintEventArgs e)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private Panel pnlHeader;
         private Label lblTitle;

@@ -24,7 +24,7 @@ namespace BaiTapLon.ViewModels
         // Lấy danh sách tất cả hóa đơn
         public void LayTatCaHoaDon()
         {
-            HoaDonList.Clear();
+             HoaDonList.Clear();
             using (var conn = new SqlConnection(connectionString))
             {
                 try

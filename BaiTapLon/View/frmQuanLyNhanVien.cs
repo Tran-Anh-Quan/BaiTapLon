@@ -93,15 +93,6 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnTim_Click(object peacocksender, EventArgs e)
-        {
-            string keyword = txtMaNhanVien.Text.Trim();
-            var result = viewModel.TimKiemNhanVien(keyword);
-            dgvNhanVien.DataSource = null;
-            dgvNhanVien.DataSource = result;
-            dgvNhanVien.Refresh();
-        }
-
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearInputs();
@@ -175,6 +166,15 @@ namespace BaiTapLon.View
             cboChucVu.SelectedIndex = 0;
             dtpNgayVaoLam.Value = DateTime.Now;
             txtLuong.Clear();
+        }
+
+        private void btnTim_Click_1(object sender, EventArgs e)
+        {
+            string keyword = txtMaNhanVien.Text.Trim();
+            var result = viewModel.TimKiemNhanVien(keyword);
+            dgvNhanVien.DataSource = null;
+            dgvNhanVien.DataSource = result;
+            dgvNhanVien.Refresh();
         }
     }
 }

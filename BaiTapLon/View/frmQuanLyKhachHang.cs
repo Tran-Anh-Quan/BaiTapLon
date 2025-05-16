@@ -35,16 +35,6 @@ namespace BaiTapLon.View
             viewModel.LayTatCaKhachHang();
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            if (!ValidateInputs()) return;
-
-            KhachHang kh = CreateKhachHangFromInputs();
-            if (viewModel.ThemKhachHang(kh))
-            {
-                ClearInputs();
-            }
-        }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
@@ -60,21 +50,6 @@ namespace BaiTapLon.View
             ClearInputs();
         }
 
-        private void btnXoa_Click(object sender, EventArgs e)
-        {
-            string maKhachHang = txtMaKhachHang.Text.Trim();
-            if (string.IsNullOrEmpty(maKhachHang))
-            {
-                MessageBox.Show("Vui lòng nhập mã khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (MessageBox.Show("Bạn có chắc muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                viewModel.XoaKhachHang(maKhachHang);
-                ClearInputs();
-            }
-        }
 
         private void btnTim_Click(object sender, EventArgs e)
         {
@@ -83,19 +58,6 @@ namespace BaiTapLon.View
             dgvKhachHang.DataSource = null; // Xóa DataSource cũ để tránh xung đột
             dgvKhachHang.DataSource = result; // Gán lại DataSource để làm mới DataGridView
             dgvKhachHang.Refresh(); // Làm mới giao diện DataGridView
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            ClearInputs();
-            viewModel.LayTatCaKhachHang(); // Tải lại danh sách từ database
-            dgvKhachHang.DataSource = null; // Xóa DataSource cũ
-            dgvKhachHang.DataSource = viewModel.KhachHangList; // Cập nhật DataGridView
-            dgvKhachHang.Refresh(); // Làm mới giao diện
-        }
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void DgvKhachHang_SelectionChanged(object sender, EventArgs e)
@@ -144,6 +106,64 @@ namespace BaiTapLon.View
             txtEmail.Clear();
         }
 
-        
+        private void btnThem_Click_1(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            KhachHang kh = CreateKhachHangFromInputs();
+            if (viewModel.ThemKhachHang(kh))
+            {
+                ClearInputs();
+            }
+        }
+
+        private void btnSua_Click_1(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            string maKhachHang = txtMaKhachHang.Text.Trim();
+            string tenKhachHang = txtTenKhachHang.Text.Trim();
+            string soDienThoai = txtSoDienThoai.Text.Trim();
+            string diaChi = txtDiaChi.Text.Trim();
+            string email = txtEmail.Text.Trim();
+
+            viewModel.SuaKhachHang(maKhachHang, tenKhachHang, soDienThoai, diaChi, email);
+            ClearInputs();
+        }
+
+        private void btnXoa_Click_1(object sender, EventArgs e)
+        {
+            string maKhachHang = txtMaKhachHang.Text.Trim();
+            if (string.IsNullOrEmpty(maKhachHang))
+            {
+                MessageBox.Show("Vui lòng nhập mã khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có chắc muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                viewModel.XoaKhachHang(maKhachHang);
+                ClearInputs();
+            }
+        }
+
+        private void btnLamMoi_Click_1(object sender, EventArgs e)
+        {
+            ClearInputs();
+            viewModel.LayTatCaKhachHang(); // Tải lại danh sách từ database
+            dgvKhachHang.DataSource = null; // Xóa DataSource cũ
+            dgvKhachHang.DataSource = viewModel.KhachHangList; // Cập nhật DataGridView
+            dgvKhachHang.Refresh(); // Làm mới giao diện
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void dgvKhachHang_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

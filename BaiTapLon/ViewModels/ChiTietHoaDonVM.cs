@@ -11,7 +11,7 @@ namespace BaiTapLon.ViewModels
     public class ChiTietHoaDonVM : INotifyPropertyChanged
     {
         public BindingList<HoaDon> HoaDonList { get; private set; } = new BindingList<HoaDon>();
-        private readonly string connectionString = @"Data Source=LAPTOP-VTKAQD4V;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
 
         private decimal tongTien;
         public decimal TongTien

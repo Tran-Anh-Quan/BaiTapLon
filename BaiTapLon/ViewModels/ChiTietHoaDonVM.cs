@@ -13,7 +13,7 @@ namespace BaiTapLon.ViewModels
         public BindingList<HoaDon> HoaDonList { get; private set; } = new BindingList<HoaDon>();
         public BindingList<ChiTietHoaDon> ChiTietHoaDonList { get; private set; } = new BindingList<ChiTietHoaDon>();
 
-        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang4;Integrated Security=True";
 
         private decimal tongTien;
         public decimal TongTien

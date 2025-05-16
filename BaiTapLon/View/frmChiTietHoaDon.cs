@@ -178,6 +178,24 @@ namespace BaiTapLon.View
             xuatHoaDon.Show();
         }
 
+        private void pnlCustomerInfo_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
+
+        private void btnKiemTraKH_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnlSummary_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

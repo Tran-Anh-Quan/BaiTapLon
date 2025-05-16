@@ -128,7 +128,11 @@ namespace BaiTapLon
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (this.MdiParent != null)
+            {
+                this.MdiParent.Activate(); // Kích hoạt form cha
+            }
+            this.Close();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BaiTapLon.ViewModels
 {
     public class HoaDonChiTietVM
     {
-        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang;Integrated Security=True";
+        private string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBanHang4;Integrated Security=True";
 
         public List<HoaDonChiTietDTO> LayTatCaHoaDonGopChiTiet()
         {

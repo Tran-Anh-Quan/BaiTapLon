@@ -93,6 +93,10 @@ namespace BaiTapLon.View
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
+            if (this.MdiParent != null)
+            {
+                this.MdiParent.Activate(); // Kích hoạt form cha
+            }
             this.Close();
         }
 

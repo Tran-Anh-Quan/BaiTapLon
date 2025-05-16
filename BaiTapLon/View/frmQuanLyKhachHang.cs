@@ -51,15 +51,6 @@ namespace BaiTapLon.View
         }
 
 
-        private void btnTim_Click(object sender, EventArgs e)
-        {
-            string keyword = txtMaKhachHang.Text.Trim();
-            var result = viewModel.TimKiemKhachHang(keyword); // Tìm kiếm khách hàng
-            dgvKhachHang.DataSource = null; // Xóa DataSource cũ để tránh xung đột
-            dgvKhachHang.DataSource = result; // Gán lại DataSource để làm mới DataGridView
-            dgvKhachHang.Refresh(); // Làm mới giao diện DataGridView
-        }
-
         private void DgvKhachHang_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvKhachHang.SelectedRows.Count > 0)
@@ -158,12 +149,25 @@ namespace BaiTapLon.View
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (this.MdiParent != null)
+            {
+                this.MdiParent.Activate(); 
+            }
+            this.Close();
         }
 
         private void dgvKhachHang_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void btnTim_Click_1(object sender, EventArgs e)
+        {
+            string keyword = txtMaKhachHang.Text.Trim();
+            var result = viewModel.TimKiemKhachHang(keyword); // Tìm kiếm khách hàng
+            dgvKhachHang.DataSource = null; // Xóa DataSource cũ để tránh xung đột
+            dgvKhachHang.DataSource = result; // Gán lại DataSource để làm mới DataGridView
+            dgvKhachHang.Refresh(); // Làm mới giao diện DataGridView
         }
     }
 }

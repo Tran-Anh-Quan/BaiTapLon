@@ -28,7 +28,7 @@ namespace BaiTapLon.View
             dgvTaiKhoan.SelectionChanged += DgvTaiKhoan_SelectionChanged;
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
+        private void btnThem_Click_1(object sender, EventArgs e)
         {
             string maNhanVien = txtMaNhanVien.Text.Trim();
             string tenDangNhap = txtTenDangNhap.Text.Trim();
@@ -66,7 +66,7 @@ namespace BaiTapLon.View
             ClearInputs();
         }
 
-        private void btnXoa_Click(object sender, EventArgs e)
+        private void btnXoa_Click_1(object sender, EventArgs e)
         {
             string maNhanVien = txtMaNhanVien.Text.Trim();
 
@@ -84,7 +84,7 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnTim_Click(object sender, EventArgs e)
+        private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string maNhanVien = txtMaNhanVien.Text.Trim();
             viewModel.List.Clear(); // Xóa danh sách hiện tại trong DataGridView
@@ -102,7 +102,7 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
+        private void btnThoat_Click_1(object sender, EventArgs e)
         {
             this.Close();
             var frmDangNhap = new frmDangNhap();
@@ -125,6 +125,20 @@ namespace BaiTapLon.View
             txtMaNhanVien.Clear();
             txtTenDangNhap.Clear();
             txtMatKhau.Clear();
+        }
+
+        private void btnLamMoi_Click(object sender, EventArgs e)
+        {
+            txtMaNhanVien.Clear();
+            txtTenDangNhap.Clear();
+            txtMatKhau.Clear();
+            viewModel.LoadTaiKhoanData(); 
+            ClearInputs();
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

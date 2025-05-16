@@ -107,21 +107,22 @@
             this.pnlInput.Name = "pnlInput";
             this.pnlInput.Size = new System.Drawing.Size(860, 156);
             this.pnlInput.TabIndex = 1;
+            this.pnlInput.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInput_Paint);
             // 
             // btnThoat
             // 
-            this.btnThoat.Location = new System.Drawing.Point(460, 120);
+            this.btnThoat.Location = new System.Drawing.Point(726, 120);
             this.btnThoat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnThoat.Name = "btnThoat";
-            this.btnThoat.Size = new System.Drawing.Size(80, 24);
+            this.btnThoat.Size = new System.Drawing.Size(93, 24);
             this.btnThoat.TabIndex = 25;
-            this.btnThoat.Text = "Thoát";
+            this.btnThoat.Text = "Thanh Toán";
             this.btnThoat.UseVisualStyleBackColor = true;
             this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 
             // btnLamMoi
             // 
-            this.btnLamMoi.Location = new System.Drawing.Point(370, 120);
+            this.btnLamMoi.Location = new System.Drawing.Point(366, 120);
             this.btnLamMoi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLamMoi.Name = "btnLamMoi";
             this.btnLamMoi.Size = new System.Drawing.Size(80, 24);
@@ -143,7 +144,7 @@
             // 
             // btnXoa
             // 
-            this.btnXoa.Location = new System.Drawing.Point(730, 120);
+            this.btnXoa.Location = new System.Drawing.Point(464, 120);
             this.btnXoa.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(80, 24);
@@ -283,7 +284,7 @@
             // lblSoLuong
             // 
             this.lblSoLuong.AutoSize = true;
-            this.lblSoLuong.Location = new System.Drawing.Point(17, 123);
+            this.lblSoLuong.Location = new System.Drawing.Point(9, 123);
             this.lblSoLuong.Name = "lblSoLuong";
             this.lblSoLuong.Size = new System.Drawing.Size(67, 16);
             this.lblSoLuong.TabIndex = 7;

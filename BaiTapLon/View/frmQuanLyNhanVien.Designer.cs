@@ -243,6 +243,7 @@
             this.btnThoat.TabIndex = 19;
             this.btnThoat.Text = "Thoát";
             this.btnThoat.UseVisualStyleBackColor = true;
+            this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 
             // btnXoa
             // 
@@ -255,6 +256,7 @@
             this.btnXoa.TabIndex = 16;
             this.btnXoa.Text = "  Xóa";
             this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnTim
             // 
@@ -280,6 +282,7 @@
             this.btnSua.TabIndex = 15;
             this.btnSua.Text = "Sửa";
             this.btnSua.UseVisualStyleBackColor = true;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click_1);
             // 
             // btnThem
             // 
@@ -293,6 +296,7 @@
             this.btnThem.TabIndex = 14;
             this.btnThem.Text = " Thêm";
             this.btnThem.UseVisualStyleBackColor = true;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click_1);
             // 
             // btnLamMoi
             // 
@@ -305,6 +309,7 @@
             this.btnLamMoi.TabIndex = 18;
             this.btnLamMoi.Text = "    Làm Mới";
             this.btnLamMoi.UseVisualStyleBackColor = true;
+            this.btnLamMoi.Click += new System.EventHandler(this.btnLamMoi_Click_1);
             // 
             // lblTitle
             // 
@@ -316,6 +321,7 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản Lý Nhân Viên";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // pnlHeader
             // 

@@ -83,7 +83,6 @@ namespace BaiTapLon.View
                 case "Quản lý khách hàng":
                     OpenChildForm(new frmQuanLyKhachHang());
                     break;
-
                 case "Quản lý hóa đơn":
                     OpenChildForm(new frmHoaDon());
                     break;

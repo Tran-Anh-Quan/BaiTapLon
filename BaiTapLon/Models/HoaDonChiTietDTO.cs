@@ -1,5 +1,4 @@
-﻿using BaiTapLon.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BaiTapLon.Models
 {
-    public class HoaDon
+    public class HoaDonChiTietDTO
     {
         public string MaHoaDon { get; set; }
         public string MaKhachHang { get; set; }
@@ -16,10 +15,10 @@ namespace BaiTapLon.Models
         public decimal VAT { get; set; }
         public decimal ThanhToan { get; set; }
 
-        List<ChiTietHoaDon> chiTiets = new List<ChiTietHoaDon>(); 
+        public string MaSanPham { get; set; }
+        public int SoLuong { get; set; }
+        public decimal DonGia { get; set; }
+        public decimal GiamGia { get; set; }
     }
-
-
-
 
 }

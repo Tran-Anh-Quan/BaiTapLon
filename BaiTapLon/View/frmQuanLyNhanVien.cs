@@ -50,18 +50,7 @@ namespace BaiTapLon.View
             viewModel.LayTatCaNhanVien();
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            if (!ValidateInputs()) return;
-
-            NhanVien nv = CreateNhanVienFromInputs();
-            if (viewModel.ThemNhanVien(nv))
-            {
-                ClearInputs();
-            }
-        }
-
-        private void btnSua_Click(object sender, EventArgs e)
+        private void btnSua_Click_1(object sender, EventArgs e)
         {
             if (!ValidateInputs()) return;
 
@@ -93,7 +82,7 @@ namespace BaiTapLon.View
             }
         }
 
-        private void btnLamMoi_Click(object sender, EventArgs e)
+        private void btnLamMoi_Click_1(object sender, EventArgs e)
         {
             ClearInputs();
             viewModel.LayTatCaNhanVien();
@@ -176,5 +165,23 @@ namespace BaiTapLon.View
             dgvNhanVien.DataSource = result;
             dgvNhanVien.Refresh();
         }
+
+        private void lblTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnThem_Click_1(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            NhanVien nv = CreateNhanVienFromInputs();
+            if (viewModel.ThemNhanVien(nv))
+            {
+                ClearInputs();
+            }
+        }
+
+
     }
 }
